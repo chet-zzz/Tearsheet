@@ -5,10 +5,10 @@
       "type": "Page",
       "props": {
         "title": "Magnificent 7 财务对比",
-        "subtitle": "估值 · 增长 · 质量(ROIC) · 资本配置 · 现金流 · 单位：十亿美元 · 财报源 SEC 10-K，估值/市值 as-of 2026-06-08 (stockanalysis.com)",
+        "subtitle": "估值 · 增长 · 质量(ROIC) · 资本配置 · 现金流 · 单位：十亿美元 · 财报源 SEC 10-K，估值/前瞻一致预期 as-of 2026-06-08 (stockanalysis.com)",
         "updatedAt": "2026-06-08"
       },
-      "children": ["sec-kpi", "sec-valuation", "sec-position", "sec-allocation", "sec-cash", "sec-insight"]
+      "children": ["sec-kpi", "sec-valuation", "sec-position", "sec-trend", "sec-capital", "sec-insight"]
     },
 
     "sec-kpi": {
@@ -33,7 +33,7 @@
 
     "sec-valuation": {
       "type": "Section",
-      "props": { "title": "估值与质量全景", "description": "谁贵 / 谁优质 / 谁增长——市值条编码规模，FCF收益率/增速/ROIC/Rule40 色阶定强弱，底部为 M7 中位基准" },
+      "props": { "title": "估值与质量全景", "description": "一张表把所有单指标排名「合并」：市值条编码规模，TTM 与前瞻 P/E 并看，FCF收益率/增速/ROIC/Rule40 色阶定强弱，底部为 M7 中位基准" },
       "children": ["comp-table"]
     },
     "comp-table": {
@@ -46,17 +46,19 @@
         "columnGroups": [
           { "span": 1 },
           { "label": "规模", "span": 1 },
-          { "label": "估值（越低越便宜）", "span": 3 },
-          { "label": "增长与质量（越高越好）", "span": 3 }
+          { "label": "估值（越低越便宜）", "span": 4 },
+          { "label": "增长与质量（越高越好）", "span": 4 }
         ],
         "data": { "$computed": "sortBy", "args": { "rows": { "$state": "/datasets/m7/rows" }, "field": "market_cap", "dir": "desc" } },
         "columns": [
           { "key": "company", "label": "公司" },
           { "key": "market_cap", "label": "市值 (十亿$)", "format": "number", "mode": "bar" },
           { "key": "pe_ttm", "label": "P/E", "format": "number", "digits": 1, "align": "right" },
+          { "key": "fwd_pe", "label": "前瞻 P/E", "format": "number", "digits": 1, "align": "right" },
           { "key": "ev_ebitda", "label": "EV/EBITDA", "format": "number", "digits": 1, "align": "right" },
           { "key": "fcf_yield", "label": "FCF收益率", "format": "percent", "digits": 1, "mode": "heat" },
           { "key": "rev_growth", "label": "营收增速", "format": "percent", "digits": 1, "mode": "heat" },
+          { "key": "fwd_rev_growth", "label": "前瞻增速", "format": "percent", "digits": 1, "mode": "heat" },
           { "key": "roic", "label": "ROIC", "format": "percent", "digits": 1, "mode": "heat" },
           { "key": "rule_of_40", "label": "Rule of 40", "format": "number", "digits": 0, "mode": "heat" }
         ]
@@ -66,13 +68,13 @@
 
     "sec-position": {
       "type": "Section",
-      "props": { "title": "增长 × 质量定位与达标", "description": "谁在「双高」优势区、谁过 Rule of 40 及格线" },
+      "props": { "title": "增长 × 质量定位与达标", "description": "散点看「在不在双高优势区」，子弹看「过没过 Rule of 40 门槛」" },
       "children": ["grid-position"]
     },
     "grid-position": {
       "type": "Grid",
-      "props": { "gap": "sm", "spans": [6, 6] },
-      "children": ["scatter-gq", "rule40-bar"]
+      "props": { "gap": "sm", "spans": [7, 5] },
+      "children": ["scatter-gq", "rule40-bullet"]
     },
     "scatter-gq": {
       "type": "ScatterChart",
@@ -82,37 +84,33 @@
         "xKey": "rev_growth", "yKey": "roic", "sizeKey": "market_cap", "nameKey": "company",
         "xLabel": "营收增速%", "yLabel": "ROIC%",
         "quadrantMean": true,
-        "valueFormat": "number", "height": 300,
+        "percentAxes": true,
+        "valueFormat": "number", "height": 320,
         "data": { "$state": "/datasets/m7/rows" }
       },
       "children": []
     },
-    "rule40-bar": {
-      "type": "BarChart",
+    "rule40-bullet": {
+      "type": "BulletChart",
       "props": {
-        "title": "Rule of 40 达标排行",
-        "subtitle": "营收增速 + 经营利润率，>40 为健康（软件/科技通用门槛）",
-        "xKey": "company",
-        "sort": "desc",
-        "showValues": true,
+        "title": "Rule of 40 达标",
+        "subtitle": "营收增速 + 经营利润率，对标 40 门槛（刻度线）",
+        "labelKey": "company", "valueKey": "rule_of_40", "targetKey": "r40_target",
         "valueFormat": "number",
-        "height": 300,
-        "refLines": [{ "y": 40, "label": "及格线 40", "tone": "warning" }],
-        "series": [{ "key": "rule_of_40", "label": "Rule of 40" }],
-        "data": { "$state": "/datasets/m7/rows" }
+        "data": { "$computed": "sortBy", "args": { "rows": { "$state": "/datasets/m7/rows" }, "field": "rule_of_40", "dir": "desc" } }
       },
       "children": []
     },
 
-    "sec-allocation": {
+    "sec-trend": {
       "type": "Section",
-      "props": { "title": "赚钱与花钱", "description": "钱主要花到哪、现金又如何在「再投资 / 回报股东」间分配" },
-      "children": ["grid-allocation"]
+      "props": { "title": "成本结构与增长趋势", "description": "钱花到哪、增长在加速还是减速" },
+      "children": ["grid-trend"]
     },
-    "grid-allocation": {
+    "grid-trend": {
       "type": "Grid",
       "props": { "gap": "sm", "spans": [6, 6] },
-      "children": ["cost-structure", "capital-alloc"]
+      "children": ["cost-structure", "growth-slope"]
     },
     "cost-structure": {
       "type": "BarChart",
@@ -126,11 +124,48 @@
         "height": 300,
         "series": [
           { "key": "cogs", "label": "营业成本" },
-          { "key": "rd", "label": "研发/技术" },
+          { "key": "rd", "label": "研发/技术", "color": 2 },
           { "key": "sga", "label": "销售管理/运营" },
           { "key": "profit", "label": "经营利润" }
         ],
         "data": { "$computed": "sortBy", "args": { "rows": { "$state": "/datasets/m7/rows" }, "field": "op_margin", "dir": "asc" } }
+      },
+      "children": []
+    },
+    "growth-slope": {
+      "type": "SlopeChart",
+      "props": {
+        "title": "营收增速：TTM → 前瞻一致预期",
+        "subtitle": "谁在加速、谁在减速（特斯拉缺前瞻一致预期，未纳入）",
+        "labelKey": "company", "startKey": "rev_growth", "endKey": "fwd_rev_growth",
+        "startLabel": "TTM", "endLabel": "前瞻", "valueFormat": "percent", "height": 300,
+        "data": { "$computed": "filter", "args": { "rows": { "$state": "/datasets/m7/rows" }, "field": "company", "op": "ne", "value": "特斯拉" } }
+      },
+      "children": []
+    },
+
+    "sec-capital": {
+      "type": "Section",
+      "props": { "title": "资本去向与 AI 投入", "description": "AI 资本开支的绝对额与强度、现金在「再投资 / 回报股东」间如何分配" },
+      "children": ["grid-capital"]
+    },
+    "grid-capital": {
+      "type": "Grid",
+      "props": { "gap": "sm", "spans": [6, 6] },
+      "children": ["capex-combo", "capital-alloc"]
+    },
+    "capex-combo": {
+      "type": "ComboChart",
+      "props": {
+        "title": "AI 资本开支：绝对额 vs 强度",
+        "subtitle": "柱=资本开支(十亿$，左轴) · 线=占营收%(右轴) — 亚马逊额大、Meta 强度最高",
+        "xKey": "company",
+        "secondAxis": true,
+        "valueFormat": "number",
+        "height": 300,
+        "bars": [{ "key": "capex", "label": "资本开支 (十亿$)", "color": 5 }],
+        "lines": [{ "key": "capex_intensity", "label": "资本开支强度%" }],
+        "data": { "$computed": "sortBy", "args": { "rows": { "$state": "/datasets/m7/rows" }, "field": "capex", "dir": "desc" } }
       },
       "children": []
     },
@@ -144,51 +179,12 @@
         "valueFormat": "number",
         "height": 300,
         "series": [
-          { "key": "capex", "label": "资本开支" },
-          { "key": "rd", "label": "研发" },
+          { "key": "capex", "label": "资本开支", "color": 5 },
+          { "key": "rd", "label": "研发", "color": 2 },
           { "key": "buyback", "label": "股票回购" },
           { "key": "dividend", "label": "分红" }
         ],
         "data": { "$computed": "sortBy", "args": { "rows": { "$state": "/datasets/m7/rows" }, "field": "revenue", "dir": "desc" } }
-      },
-      "children": []
-    },
-
-    "sec-cash": {
-      "type": "Section",
-      "props": { "title": "现金含金量与 AI 投入", "description": "利润是否变现金、资本开支强度吞噬多少自由现金流" },
-      "children": ["grid-cash"]
-    },
-    "grid-cash": {
-      "type": "Grid",
-      "props": { "gap": "sm", "spans": [6, 6] },
-      "children": ["cfo-ni", "fcf-capex"]
-    },
-    "cfo-ni": {
-      "type": "DumbbellChart",
-      "props": {
-        "title": "经营现金流 vs 净利润",
-        "subtitle": "现金流 > 净利 = 盈利含金量高（十亿美元）",
-        "labelKey": "company", "startKey": "net_income", "endKey": "cfo",
-        "startLabel": "净利润", "endLabel": "经营现金流", "valueFormat": "number",
-        "data": { "$computed": "sortBy", "args": { "rows": { "$state": "/datasets/m7/rows" }, "field": "cfo", "dir": "desc" } }
-      },
-      "children": []
-    },
-    "fcf-capex": {
-      "type": "BarChart",
-      "props": {
-        "title": "自由现金流率 vs 资本开支率：AI 军备竞赛吞噬现金",
-        "subtitle": "资本开支占营收越高，留存的自由现金流越薄（%）",
-        "xKey": "company",
-        "valueFormat": "percent",
-        "showValues": true,
-        "height": 300,
-        "series": [
-          { "key": "fcf_margin", "label": "自由现金流率%" },
-          { "key": "capex_intensity", "label": "资本开支率%" }
-        ],
-        "data": { "$computed": "sortBy", "args": { "rows": { "$state": "/datasets/m7/rows" }, "field": "capex_intensity", "dir": "desc" } }
       },
       "children": []
     },
@@ -201,13 +197,13 @@
     "grid-insight": {
       "type": "Grid",
       "props": { "gap": "sm", "spans": [3, 3, 3, 3] },
-      "children": ["insight-val", "insight-quality", "insight-capital", "insight-ai"]
+      "children": ["insight-val", "insight-quality", "insight-sbc", "insight-ai"]
     },
     "insight-val": {
       "type": "Insight",
       "props": {
-        "title": "估值分化：贵得有理 vs 贵得离谱",
-        "content": "特斯拉 P/E 380×、EV/EBITDA 130× 却营收 −2.9%、ROIC 仅 6%，估值与基本面严重背离；Meta（P/E 21.6）、微软（24.8）相对最便宜，且 Rule of 40 分别 64 / 61，是「便宜且优质」一档。",
+        "title": "估值分化：贵得有理 vs 离谱",
+        "content": "特斯拉 P/E 380×（前瞻仍 181×）却营收 −2.9%、ROIC 6%，估值与基本面严重背离；Meta（前瞻 P/E 18×）、微软（22×）相对最便宜，且 Rule of 40 达 60+，是「便宜又优质」一档；英伟达前瞻 P/E 仅 21×，增长消化了估值。",
         "tone": "warning"
       },
       "children": []
@@ -221,20 +217,20 @@
       },
       "children": []
     },
-    "insight-capital": {
+    "insight-sbc": {
       "type": "Insight",
       "props": {
-        "title": "资本配置：现金牛 vs 再投资狂",
-        "content": "苹果一年回购 $967 亿、股东回报合计 $1,121 亿，是典型现金牛；亚马逊、特斯拉 0 回购 0 分红，把现金全部砸回再投资（亚马逊资本开支 $1,318 亿 + 研发 $1,085 亿）。配置取向天差地别。",
-        "tone": "neutral"
+        "title": "别只看 FCF：股权激励在「注水」",
+        "content": "SBC（不花现金的股权激励）被加回经营现金流，撑高了自由现金流。扣掉 SBC 后，亚马逊 FCF 从 +$77 亿转为 −$118 亿（SBC 高达 $195 亿）、Meta/谷歌也被显著稀释；英伟达、苹果 SBC 占比低，FCF 更「干净」。",
+        "tone": "warning"
       },
       "children": []
     },
     "insight-ai": {
       "type": "Insight",
       "props": {
-        "title": "AI 投入与增长质量",
-        "content": "英伟达 Rule of 40 高达 126 一骑绝尘（增速 65% + 利润率 60%）；Meta（35%）、微软（23%）、谷歌（23%）把两成以上营收砸进 AI 资本开支；只有亚马逊（24）、特斯拉（2）未过 Rule of 40 及格线。",
+        "title": "增长质量与 AI 投入",
+        "content": "英伟达增速虽从 65% 放缓到前瞻 40%，Rule of 40 仍高达 126 一骑绝尘；Meta（强度 35%）、微软（23%）、谷歌（23%）把两成以上营收砸进 AI 资本开支；只有亚马逊（24）、特斯拉（2）未过 Rule of 40 及格线。",
         "tone": "neutral"
       },
       "children": []
