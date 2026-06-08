@@ -141,14 +141,14 @@ export const chartRenderers: Pick<
               key={s.key}
               dataKey={s.key}
               name={s.label ?? s.key}
-              fill={chartColor(i)}
+              fill={chartColor(s.color != null ? s.color - 1 : i)}
               stackId={props.stacked || props.stack100 ? "stack" : undefined}
               radius={props.horizontal ? [0, 4, 4, 0] : [4, 4, 0, 0]}
               maxBarSize={props.stacked || props.stack100 ? 56 : 40}
               isAnimationActive={false}
             >
               {single &&
-                (props.diverging || target !== null) &&
+                (props.diverging || props.colorByThreshold != null || target !== null) &&
                 data.map((d, di) => {
                   const v = Number(d[single]);
                   if (props.diverging) {
@@ -156,6 +156,14 @@ export const chartRenderers: Pick<
                       <Cell
                         key={di}
                         fill={v >= 0 ? "var(--success)" : "var(--destructive)"}
+                      />
+                    );
+                  }
+                  if (props.colorByThreshold != null) {
+                    return (
+                      <Cell
+                        key={di}
+                        fill={v >= props.colorByThreshold ? "var(--success)" : "var(--destructive)"}
                       />
                     );
                   }
@@ -203,14 +211,14 @@ export const chartRenderers: Pick<
               type={props.smooth ? "monotone" : "linear"}
               dataKey={s.key}
               name={s.label ?? s.key}
-              stroke={chartColor(i)}
+              stroke={chartColor(s.color != null ? s.color - 1 : i)}
               strokeWidth={2}
               dot={false}
               activeDot={{ r: 4 }}
               isAnimationActive={false}
             >
               {props.showValues && (
-                <LabelList content={lastValueLabel(data.length, chartColor(i))} />
+                <LabelList content={lastValueLabel(data.length, chartColor(s.color != null ? s.color - 1 : i))} />
               )}
             </Line>
           ))}
@@ -230,8 +238,8 @@ export const chartRenderers: Pick<
           <defs>
             {series.map((s, i) => (
               <linearGradient key={s.key} id={gid(i)} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={chartColor(i)} stopOpacity={0.3} />
-                <stop offset="95%" stopColor={chartColor(i)} stopOpacity={0.02} />
+                <stop offset="5%" stopColor={chartColor(s.color != null ? s.color - 1 : i)} stopOpacity={0.3} />
+                <stop offset="95%" stopColor={chartColor(s.color != null ? s.color - 1 : i)} stopOpacity={0.02} />
               </linearGradient>
             ))}
           </defs>
@@ -248,7 +256,7 @@ export const chartRenderers: Pick<
               type="natural"
               dataKey={s.key}
               name={s.label ?? s.key}
-              stroke={chartColor(i)}
+              stroke={chartColor(s.color != null ? s.color - 1 : i)}
               fill={`url(#${gid(i)})`}
               fillOpacity={1}
               strokeWidth={2}
@@ -256,7 +264,7 @@ export const chartRenderers: Pick<
               isAnimationActive={false}
             >
               {props.showValues && (
-                <LabelList content={lastValueLabel(data.length, chartColor(i))} />
+                <LabelList content={lastValueLabel(data.length, chartColor(s.color != null ? s.color - 1 : i))} />
               )}
             </Area>
           ))}
@@ -317,7 +325,7 @@ export const chartRenderers: Pick<
               yAxisId="left"
               dataKey={s.key}
               name={s.label ?? s.key}
-              fill={chartColor(i)}
+              fill={chartColor(s.color != null ? s.color - 1 : i)}
               radius={[4, 4, 0, 0]}
               maxBarSize={44}
               isAnimationActive={false}

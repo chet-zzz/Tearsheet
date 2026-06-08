@@ -224,6 +224,9 @@ export const extraChartRenderers: Pick<
   ScatterChart: ({ props }) => {
     const rows = asRows(props.data);
     const vf = props.valueFormat ?? "number";
+    const axisFmt = props.percentAxes
+      ? (v: unknown) => `${compactTick(v)}%`
+      : compactTick;
 
     // 均值基准：把散点放进「相对全体的位置」语境，并轻染双高优势区（治小 N 空旷）
     const mean = (k: string) => {
@@ -276,7 +279,7 @@ export const extraChartRenderers: Pick<
             tick={axisTick}
             tickLine={false}
             axisLine={false}
-            tickFormatter={compactTick}
+            tickFormatter={axisFmt}
           />
           <YAxis
             type="number"
@@ -285,7 +288,7 @@ export const extraChartRenderers: Pick<
             tick={axisTick}
             tickLine={false}
             axisLine={false}
-            tickFormatter={compactTick}
+            tickFormatter={axisFmt}
           />
           {props.sizeKey && (
             <ZAxis type="number" dataKey={props.sizeKey} range={[120, 900]} />

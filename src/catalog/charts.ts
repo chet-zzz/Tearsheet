@@ -12,6 +12,15 @@ const series = z
     z.object({
       key: z.string().describe("取值字段名"),
       label: z.string().optional().describe("图例名称"),
+      color: z
+        .number()
+        .int()
+        .min(1)
+        .max(5)
+        .optional()
+        .describe(
+          "调色板槽位 1-5（不是具体颜色，仍由主题决定）。默认按系列顺序自动取色；当同一指标(如资本开支)出现在多张图、想让它全场同色时，给它固定同一个槽位——建立报告级「指标→颜色」一致性。",
+        ),
     }),
   )
   .min(1)
@@ -88,6 +97,12 @@ export const chartComponents = {
         .boolean()
         .default(false)
         .describe("单系列时按正负着色：正绿负红（盈亏 / 同比差异 / 预算偏差图）"),
+      colorByThreshold: z
+        .number()
+        .optional()
+        .describe(
+          "单系列时按是否达阈值着色：≥ 阈值绿（达标）、< 阈值红（未达）。做「达标排行」（如 Rule of 40>40、毛利率>某线）一眼区分过线与否；通常配 refLines 画出该线。",
+        ),
       ...annotations,
       height,
     }),
@@ -267,6 +282,10 @@ export const chartComponents = {
         .describe(
           "按数据均值画十字基准线（而非 0），并把「双高」象限轻染为优势区。小 N 截面对比时给散点补上下文、避免空旷，把 7 个点变成可解读的矩阵。",
         ),
+      percentAxes: z
+        .boolean()
+        .default(false)
+        .describe("x/y 轴刻度加 % 后缀（两轴都是百分比指标时，如利润率 × 增速）"),
       valueFormat,
       height,
     }),
