@@ -47,10 +47,18 @@ export const tableRenderers: Pick<Components<ReportCatalog>, "DataTable"> = {
       (c.format ?? "text") !== "text" || c.mode === "bar" || c.mode === "heat";
     const means: Record<string, number> = {};
     if (props.summaryRow) {
+      const agg = props.summaryAgg ?? "mean";
       for (const col of columns) {
         if (!isNumericCol(col)) continue;
         const vals = rows.map((r) => Number(r[col.key])).filter(Number.isFinite);
-        if (vals.length) means[col.key] = vals.reduce((a, b) => a + b, 0) / vals.length;
+        if (!vals.length) continue;
+        if (agg === "median") {
+          const s = [...vals].sort((a, b) => a - b);
+          const m = Math.floor(s.length / 2);
+          means[col.key] = s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+        } else {
+          means[col.key] = vals.reduce((a, b) => a + b, 0) / vals.length;
+        }
       }
     }
     const groups = props.columnGroups;

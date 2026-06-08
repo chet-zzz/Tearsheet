@@ -44,7 +44,11 @@ export const tableComponents = {
       summaryRow: z
         .boolean()
         .default(false)
-        .describe("在表底追加一行各数值列的均值，作为横向对比的 benchmark（comp 表强烈建议开）。"),
+        .describe("在表底追加一行各数值列的汇总，作为横向对比的 benchmark（comp 表强烈建议开）。"),
+      summaryAgg: z
+        .enum(["mean", "median"])
+        .default("mean")
+        .describe("汇总行口径：mean 均值 / median 中位数。估值倍数等有极端值(如某家 P/E 畸高)时用 median 更具代表性。"),
       summaryLabel: z.string().default("均值").describe("汇总行在首列显示的名称"),
       caption: z.string().optional().describe("表格标题 / 说明"),
       pageSize: z
