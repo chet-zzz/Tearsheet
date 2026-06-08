@@ -8,77 +8,68 @@
         "subtitle": "营收 · 经营成本去向 · 现金流健康度 · 单位：十亿美元 · 数据源：SEC EDGAR 10-K（各家最新财年）",
         "updatedAt": "2026-06-08"
       },
-      "children": ["sec-kpi", "sec-rev", "sec-cash", "sec-insight"]
+      "children": ["sec-kpi", "sec-comp", "sec-mix", "sec-cash", "sec-insight"]
     },
 
     "sec-kpi": {
       "type": "Section",
-      "props": { "title": "M7 概览", "description": "七家合计（各自最新财年）" },
-      "children": ["grid-kpi"]
+      "props": { "title": "M7 概览", "description": "七家合计（各自最新财年）· 单位十亿美元" },
+      "children": ["kpi-bar"]
     },
-    "grid-kpi": {
-      "type": "Grid",
-      "props": { "gap": "sm", "spans": [3, 3, 3, 3] },
-      "children": ["kpi-rev", "kpi-ni", "kpi-fcf", "kpi-capex"]
-    },
-    "kpi-rev": {
-      "type": "KpiCard",
+    "kpi-bar": {
+      "type": "SummaryBar",
       "props": {
-        "label": "合计营收", "icon": "revenue", "format": "number", "unit": "十亿$",
-        "value": { "$computed": "sum", "args": { "rows": { "$state": "/datasets/m7/rows" }, "field": "revenue" } }
-      },
-      "children": []
-    },
-    "kpi-ni": {
-      "type": "KpiCard",
-      "props": {
-        "label": "合计净利润", "icon": "profit", "format": "number", "unit": "十亿$",
-        "value": { "$computed": "sum", "args": { "rows": { "$state": "/datasets/m7/rows" }, "field": "net_income" } }
-      },
-      "children": []
-    },
-    "kpi-fcf": {
-      "type": "KpiCard",
-      "props": {
-        "label": "合计自由现金流", "icon": "chart", "format": "number", "unit": "十亿$",
-        "value": { "$computed": "sum", "args": { "rows": { "$state": "/datasets/m7/rows" }, "field": "fcf" } }
-      },
-      "children": []
-    },
-    "kpi-capex": {
-      "type": "KpiCard",
-      "props": {
-        "label": "合计资本开支", "icon": "cost", "format": "number", "unit": "十亿$",
-        "value": { "$computed": "sum", "args": { "rows": { "$state": "/datasets/m7/rows" }, "field": "capex" } }
+        "title": "M7 合计盘子",
+        "items": [
+          { "label": "合计营收", "unit": "十亿$", "value": { "$computed": "sum", "args": { "rows": { "$state": "/datasets/m7/rows" }, "field": "revenue" } } },
+          { "label": "合计净利润", "unit": "十亿$", "value": { "$computed": "sum", "args": { "rows": { "$state": "/datasets/m7/rows" }, "field": "net_income" } } },
+          { "label": "合计自由现金流", "unit": "十亿$", "value": { "$computed": "sum", "args": { "rows": { "$state": "/datasets/m7/rows" }, "field": "fcf" } } },
+          { "label": "合计资本开支", "unit": "十亿$", "value": { "$computed": "sum", "args": { "rows": { "$state": "/datasets/m7/rows" }, "field": "capex" } } }
+        ]
       },
       "children": []
     },
 
-    "sec-rev": {
+    "sec-comp": {
       "type": "Section",
-      "props": { "title": "营收规模与成本结构", "description": "钱从哪来、又主要花到哪去" },
-      "children": ["grid-rev"]
+      "props": { "title": "全景对比表", "description": "7 家 × 关键指标：营收条编码规模，利润率/现金流率色阶定强弱，底部为 M7 均值基准" },
+      "children": ["comp-table"]
     },
-    "grid-rev": {
-      "type": "Grid",
-      "props": { "gap": "sm", "spans": [6, 6] },
-      "children": ["rev-rank", "cost-structure"]
-    },
-    "rev-rank": {
-      "type": "BarChart",
+    "comp-table": {
+      "type": "DataTable",
       "props": {
-        "title": "营收排行",
-        "subtitle": "最新财年（十亿美元）",
-        "xKey": "company",
-        "sort": "desc",
-        "highlight": "max",
-        "showValues": true,
-        "valueFormat": "number",
-        "height": 300,
-        "series": [{ "key": "revenue", "label": "营收" }],
-        "data": { "$state": "/datasets/m7/rows" }
+        "pageSize": 0,
+        "summaryRow": true,
+        "summaryLabel": "M7 均值",
+        "columnGroups": [
+          { "span": 1 },
+          { "label": "规模", "span": 1 },
+          { "label": "盈利与变现", "span": 2 },
+          { "label": "投资强度", "span": 1 },
+          { "label": "现金质量", "span": 1 }
+        ],
+        "data": { "$computed": "sortBy", "args": { "rows": { "$state": "/datasets/m7/rows" }, "field": "revenue", "dir": "desc" } },
+        "columns": [
+          { "key": "company", "label": "公司" },
+          { "key": "revenue", "label": "营收 (十亿$)", "format": "number", "mode": "bar" },
+          { "key": "op_margin", "label": "经营利润率", "format": "percent", "mode": "heat" },
+          { "key": "fcf_margin", "label": "自由现金流率", "format": "percent", "mode": "heat" },
+          { "key": "capex_intensity", "label": "资本开支率", "format": "percent", "mode": "heat", "heatColor": "chart-3" },
+          { "key": "cash_conversion", "label": "现金转化 (×)", "format": "number", "digits": 2, "align": "right" }
+        ]
       },
       "children": []
+    },
+
+    "sec-mix": {
+      "type": "Section",
+      "props": { "title": "成本结构与盈利质量", "description": "钱主要花到哪、谁真正赚钱" },
+      "children": ["grid-mix"]
+    },
+    "grid-mix": {
+      "type": "Grid",
+      "props": { "gap": "sm", "spans": [6, 6] },
+      "children": ["cost-structure", "cash-matrix"]
     },
     "cost-structure": {
       "type": "BarChart",
@@ -87,6 +78,7 @@
         "subtitle": "营业成本 / 研发(技术) / 销售管理(含亚马逊履约) / 经营利润，按经营利润率排序",
         "xKey": "company",
         "stack100": true,
+        "showValues": true,
         "valueFormat": "number",
         "height": 300,
         "series": [
@@ -102,26 +94,44 @@
       },
       "children": []
     },
-
-    "sec-cash": {
-      "type": "Section",
-      "props": { "title": "现金流健康度", "description": "利润含金量、现金流转化与资本开支强度" },
-      "children": ["grid-cash"]
-    },
-    "grid-cash": {
-      "type": "Grid",
-      "props": { "gap": "sm", "spans": [6, 6, 8, 4] },
-      "children": ["cash-matrix", "fcf-capex", "cfo-ni", "insight-2"]
-    },
     "cash-matrix": {
       "type": "ScatterChart",
       "props": {
         "title": "盈利 × 现金流矩阵",
-        "subtitle": "x=经营利润率% · y=自由现金流率% · 气泡=营收",
+        "subtitle": "x=经营利润率% · y=自由现金流率% · 气泡=营收 · 十字为均值，右上为双高优势区",
         "xKey": "op_margin", "yKey": "fcf_margin", "sizeKey": "revenue", "nameKey": "company",
         "xLabel": "经营利润率%", "yLabel": "自由现金流率%",
-        "valueFormat": "number", "height": 260,
+        "quadrantMean": true,
+        "valueFormat": "number", "height": 300,
         "data": { "$state": "/datasets/m7/rows" }
+      },
+      "children": []
+    },
+
+    "sec-cash": {
+      "type": "Section",
+      "props": { "title": "现金流与资本开支", "description": "利润含金量与 AI 资本开支强度" },
+      "children": ["grid-cash"]
+    },
+    "grid-cash": {
+      "type": "Grid",
+      "props": { "gap": "sm", "spans": [6, 6] },
+      "children": ["fcf-capex", "cfo-ni"]
+    },
+    "fcf-capex": {
+      "type": "BarChart",
+      "props": {
+        "title": "自由现金流率 vs 资本开支率：AI 军备竞赛吞噬现金",
+        "subtitle": "资本开支占营收越高，留存的自由现金流越薄（%）",
+        "xKey": "company",
+        "valueFormat": "percent",
+        "showValues": true,
+        "height": 300,
+        "series": [
+          { "key": "fcf_margin", "label": "自由现金流率%" },
+          { "key": "capex_intensity", "label": "资本开支率%" }
+        ],
+        "data": { "$computed": "sortBy", "args": { "rows": { "$state": "/datasets/m7/rows" }, "field": "capex_intensity", "dir": "desc" } }
       },
       "children": []
     },
@@ -136,23 +146,6 @@
       },
       "children": []
     },
-    "fcf-capex": {
-      "type": "BarChart",
-      "props": {
-        "title": "自由现金流率 vs 资本开支率：AI 军备竞赛吞噬现金",
-        "subtitle": "资本开支占营收越高，留存的自由现金流越薄（%）",
-        "xKey": "company",
-        "valueFormat": "percent",
-        "showValues": true,
-        "height": 260,
-        "series": [
-          { "key": "fcf_margin", "label": "自由现金流率%" },
-          { "key": "capex_intensity", "label": "资本开支率%" }
-        ],
-        "data": { "$computed": "sortBy", "args": { "rows": { "$state": "/datasets/m7/rows" }, "field": "capex_intensity", "dir": "desc" } }
-      },
-      "children": []
-    },
 
     "sec-insight": {
       "type": "Section",
@@ -161,8 +154,8 @@
     },
     "grid-insight": {
       "type": "Grid",
-      "props": { "gap": "sm", "spans": [6, 6] },
-      "children": ["insight-1", "insight-3"]
+      "props": { "gap": "sm", "spans": [4, 4, 4] },
+      "children": ["insight-1", "insight-2", "insight-3"]
     },
     "insight-1": {
       "type": "Insight",
