@@ -133,7 +133,7 @@ props 的值可以是字面量，也可以是**表达式对象**：
 **图表** — 叶子，`data` 绑行集，字段映射声明式画图。**都支持 `title?`/`subtitle?`**（自带卡片标题，配合连续 Grid 用，省去 Section）。**`title` 建议写结论句**（「营收同比 +12%，华东领涨」）而非「营收图」。
 
 基础趋势/对比：
-- `BarChart`：`data`、`xKey`、`series[{key,label?}]`、`stacked?`、`horizontal?`、`height?`。排行榜：`sort`(asc/desc) + `highlight`(max/min，单系列时高亮那一根、其余淡化)。构成占比随时间变化用 `stack100`(百分比堆叠)。
+- `BarChart`：`data`、`xKey`、`series[{key,label?,color?}]`、`stacked?`、`horizontal?`、`height?`。排行榜：`sort`(asc/desc) + `highlight`(max/min，单系列时高亮那一根、其余淡化)。构成占比随时间变化用 `stack100`(百分比堆叠，开 `showValues` 标段内%)。达标排行用 `colorByThreshold`(数值，≥绿/<红)。`series[].color`(1-5 调色板槽位) 让同一指标跨多图固定同色。
 - `LineChart`：`data`、`xKey`、`series`、`smooth?`、`height?`
 - `AreaChart`：`data`、`xKey`、`series`、`stacked?`、`height?`
 - `PieChart`：`data`、`nameKey`、`valueKey`、`donut?`、`height?`
@@ -143,7 +143,7 @@ props 的值可以是字面量，也可以是**表达式对象**：
 - `WaterfallChart`（瀑布/利润桥）：解释「**为什么**从 A 变成 B」——营收→各项成本→净利、预算 vs 实际差异分解。`data` 每行一项增减值，`xKey`(类目)、`valueKey`(增减值，正增负减)、`totalKey?`(标记合计行的字段，画成从 0 起的总额柱)。增绿减红、自动累计。
 - `BulletChart`（子弹图）：指标**自带目标/基准**时比达成率，替代仪表盘。每行一个指标，`labelKey`、`valueKey`(实际)、`targetKey`(目标)，自动算达成%、目标处有刻度线。
 - `FunnelChart`（漏斗）：**严格单向递减**的流程（线索→签约、招聘漏斗、审批转化），暴露在哪一环流失最狠。`nameKey`(阶段)、`valueKey`(数值)，`data` 须按阶段顺序排列。
-- `ScatterChart`（散点/气泡）：看**两个连续变量的关系/离群点**（客户毛利率 vs 营收）。`xKey`、`yKey`，给 `sizeKey?` 即变气泡图，`nameKey?`/`xLabel?`/`yLabel?` 优化 tooltip，`quadrant?` 画 x=0/y=0 象限线，`quadrantMean?` 按**均值**画十字基准 + 轻染双高优势区（小 N 截面对比防空旷、把点变成可解读矩阵）。
+- `ScatterChart`（散点/气泡）：看**两个连续变量的关系/离群点**（客户毛利率 vs 营收）。`xKey`、`yKey`，给 `sizeKey?` 即变气泡图，`nameKey?`/`xLabel?`/`yLabel?` 优化 tooltip，`quadrant?` 画 x=0/y=0 象限线，`quadrantMean?` 按**均值**画十字基准 + 轻染双高优势区（小 N 截面对比防空旷、把点变成可解读矩阵），`percentAxes?` 给 x/y 轴刻度加 %。
 - `DumbbellChart`（哑铃）：**两期/区间对比**（去年 vs 今年、预算 vs 实际）。`labelKey`、`startKey`(起点)、`endKey`(终点)、`startLabel?`/`endLabel?`，连线按方向着色（增绿减红）。比并排柱更聚焦"变化量"。
 - `SlopeChart`（斜率）：**两个时点的方向/排名变化**（各类目 去年→今年 谁升谁降）。`labelKey`、`startKey`、`endKey`、`startLabel?`/`endLabel?`。值差距悬殊时下方会拥挤，适合量级相近的对比。
 - `HeatmapChart`（热力图/网格）：`x 类目 × y 类目 × 强度`（指标×季度、月×品类）。长表 `data`，`xKey`/`yKey`/`valueKey`，`diverging?`(正绿负红，适合利润率)。

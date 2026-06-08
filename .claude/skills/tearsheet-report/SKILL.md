@@ -112,6 +112,14 @@ reports/<your-id>/
 
 **小 N 防空旷**：以一张 comp 表打底；散点务必 `nameKey` 直接贴名 + `quadrantMean` 给基准；用点图/`bar` 列替代肥柱；坐标范围贴合数据。
 
+**别堆一排相似柱状图（重要）**：多个「单指标排行」不要各画一张柱图——**全部合并进一张 comp 表**（`bar`/`heat` 列即排名 + 强弱），一张顶五张。腾出的格子改用**不同的恰当图型各展所长**，既减负又自然多样：
+- 两个连续变量的相对位置 → `ScatterChart`（气泡+`quadrantMean`）
+- 是否达某门槛（Rule of 40>40、ROIC>WACC）→ `BulletChart`（实际 vs 目标刻度）
+- 两期/两预期的方向（增速 TTM→前瞻、谁升谁降）→ `SlopeChart` / `DumbbellChart`
+- 绝对额 + 相对率同图（资本开支 $ + 占营收%）→ `ComboChart`（柱+线双轴）
+- 构成占比 → `BarChart` `stack100`；现金分配构成 → `stacked` 绝对堆叠
+跨图同一指标想保持同色（如资本开支在多张图都出现）→ 给系列固定 `color` 槽位（1-5），建立报告级「指标→颜色」一致性。参考样例 `reports/m7-comparison`。
+
 > 📑 **要做「能支撑决策」的公司对比报告**（该放什么指标/章节/exhibit、需要哪些数据字段）：读
 > [`references/comparison-report-playbook.md`](references/comparison-report-playbook.md)——核心决策问题、七大指标族（估值/增长/ROIC 与 Rule of 40/现金流质量/资本配置/效率/风险）、决策级章节结构、内容→图型映射、scorecard 压缩法、数据字段来源。别只罗列营收利润，要回答"谁质量高、谁贵、谁资本配置优、AI 投入 ROI 谁更可信"。
 
