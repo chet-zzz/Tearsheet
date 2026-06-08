@@ -63,6 +63,37 @@ export const chartRenderers: Pick<
       target = props.highlight === "min" ? Math.min(...vals) : Math.max(...vals);
     }
 
+    // stack100：把每段标成「占该行的百分比」（段够高才标，避免拥挤）
+    const seriesKeys = series.map((s) => s.key);
+    const rowTotals = data.map((d) => seriesKeys.reduce((sum, k) => sum + (Number(d[k]) || 0), 0));
+    const stackPctLabel =
+      (key: string) =>
+      (p: { x?: number | string; y?: number | string; width?: number | string; height?: number | string; index?: number }) => {
+        const i = p.index ?? -1;
+        const h = Number(p.height ?? 0);
+        const tot = rowTotals[i] || 0;
+        const v = Number(data[i]?.[key]) || 0;
+        if (i < 0 || !tot || h < 14) return null;
+        const pct = (v / tot) * 100;
+        if (pct < 7) return null;
+        const cx = Number(p.x ?? 0) + Number(p.width ?? 0) / 2;
+        const cy = Number(p.y ?? 0) + h / 2;
+        return (
+          <text
+            x={cx}
+            y={cy}
+            dy={3.5}
+            textAnchor="middle"
+            fontSize={10}
+            fontWeight={600}
+            fill="#fff"
+            style={{ fontFamily: "var(--font-num)" }}
+          >
+            {Math.round(pct)}%
+          </text>
+        );
+      };
+
     return (
       <ChartFrame title={props.title} subtitle={props.subtitle} height={props.height ?? 240}>
         <RBarChart
@@ -132,7 +163,10 @@ export const chartRenderers: Pick<
                     <Cell key={di} fill="var(--chart-1)" fillOpacity={v === target ? 1 : 0.28} />
                   );
                 })}
-              {props.showValues && (
+              {props.showValues && props.stack100 && (
+                <LabelList content={stackPctLabel(s.key)} />
+              )}
+              {props.showValues && !props.stack100 && (
                 <LabelList
                   dataKey={s.key}
                   position={props.horizontal ? "right" : "top"}

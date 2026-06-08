@@ -55,4 +55,31 @@ export const metricComponents = {
       trendKey: "revenue",
     },
   },
+
+  SummaryBar: {
+    description:
+      "概览指标带：单张紧凑卡里横排多个「标签 + 数值」，竖线分隔。用来替代一排「虚胖」KPI 卡（只有绝对值、无趋势同比时），省大量垂直空间。适合放报告顶部当「总盘子」概览。每项 value 可绑 $computed。",
+    props: z.object({
+      title: z.string().optional().describe("可选小标题（如「M7 合计盘子」）"),
+      items: z
+        .array(
+          z.object({
+            label: z.string().describe("指标名"),
+            value: z.union([z.number(), z.string()]).describe("指标值，可绑 $computed"),
+            unit: z.string().optional().describe("单位后缀"),
+            format: numberFormat.default("number"),
+            digits: z.number().int().min(0).max(2).optional().describe("小数位数"),
+          }),
+        )
+        .min(2)
+        .describe("指标项数组，横排展示"),
+    }),
+    example: {
+      title: "合计盘子",
+      items: [
+        { label: "合计营收", value: 2329, unit: "十亿$" },
+        { label: "合计净利润", value: 608, unit: "十亿$" },
+      ],
+    },
+  },
 } satisfies ComponentDefs;

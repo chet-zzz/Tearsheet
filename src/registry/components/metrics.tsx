@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { iconMap } from "./icons";
 import { slug } from "./chart-kit";
 
-export const metricRenderers: Pick<Components<ReportCatalog>, "KpiCard"> = {
+export const metricRenderers: Pick<Components<ReportCatalog>, "KpiCard" | "SummaryBar"> = {
   KpiCard: ({ props }) => {
     const display =
       typeof props.value === "number"
@@ -86,6 +86,43 @@ export const metricRenderers: Pick<Components<ReportCatalog>, "KpiCard"> = {
         {footer.length > 0 && (
           <p className="px-4 text-xs text-muted-foreground">{footer.join(" · ")}</p>
         )}
+      </Card>
+    );
+  },
+
+  // 概览指标带：单卡横排多指标，竖线分隔——替代一排虚胖 KPI 卡，省垂直空间
+  SummaryBar: ({ props }) => {
+    const items = Array.isArray(props.items) ? props.items : [];
+    return (
+      <Card className="gap-0 py-3.5">
+        <div className="flex flex-wrap items-stretch gap-x-8 gap-y-3 px-5">
+          {props.title && (
+            <div className="flex items-center pr-2 text-sm font-medium text-muted-foreground">
+              {props.title}
+            </div>
+          )}
+          {items.map((it, i) => {
+            const display =
+              typeof it.value === "number"
+                ? formatNumber(it.value, it.format ?? "number", it.digits)
+                : it.value;
+            return (
+              <div
+                key={i}
+                className={cn(
+                  "flex flex-col justify-center",
+                  i > 0 && "border-l border-border pl-8",
+                )}
+              >
+                <span className="text-xs text-muted-foreground">{it.label}</span>
+                <span className="flex items-baseline gap-1">
+                  <span className="num-display text-xl font-semibold">{display}</span>
+                  {it.unit && <span className="text-xs text-muted-foreground">{it.unit}</span>}
+                </span>
+              </div>
+            );
+          })}
+        </div>
       </Card>
     );
   },

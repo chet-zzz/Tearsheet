@@ -261,6 +261,12 @@ export const chartComponents = {
         .boolean()
         .default(false)
         .describe("画 x=0 / y=0 象限分割线（增长×盈利矩阵、风险×收益矩阵等四象限分析）"),
+      quadrantMean: z
+        .boolean()
+        .default(false)
+        .describe(
+          "按数据均值画十字基准线（而非 0），并把「双高」象限轻染为优势区。小 N 截面对比时给散点补上下文、避免空旷，把 7 个点变成可解读的矩阵。",
+        ),
       valueFormat,
       height,
     }),

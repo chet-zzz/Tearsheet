@@ -13,6 +13,7 @@ import {
   Scatter,
   ZAxis,
   ReferenceLine,
+  ReferenceArea,
 } from "recharts";
 import type { Components } from "@json-render/react";
 import type { ReportCatalog } from "@/catalog";
@@ -223,10 +224,51 @@ export const extraChartRenderers: Pick<
   ScatterChart: ({ props }) => {
     const rows = asRows(props.data);
     const vf = props.valueFormat ?? "number";
+
+    // 均值基准：把散点放进「相对全体的位置」语境，并轻染双高优势区（治小 N 空旷）
+    const mean = (k: string) => {
+      const v = rows.map((r) => Number(r[k])).filter(Number.isFinite);
+      return v.length ? v.reduce((a, b) => a + b, 0) / v.length : 0;
+    };
+    const maxOf = (k: string) =>
+      rows.reduce((m, r) => Math.max(m, Number(r[k]) || 0), -Infinity);
+    const useMean = props.quadrantMean === true;
+    const mx = useMean ? mean(props.xKey) : 0;
+    const my = useMean ? mean(props.yKey) : 0;
+
     return (
       <ChartFrame title={props.title} subtitle={props.subtitle} height={props.height ?? 240}>
         <RScatterChart margin={{ top: 12, right: 16, left: 4, bottom: 8 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+          {useMean && (
+            <ReferenceArea
+              x1={mx}
+              x2={maxOf(props.xKey)}
+              y1={my}
+              y2={maxOf(props.yKey)}
+              fill="var(--success)"
+              fillOpacity={0.12}
+              ifOverflow="extendDomain"
+              label={{ value: "优势区 ↗", position: "insideTopRight", fill: "var(--success)", fontSize: 10, opacity: 0.7 }}
+            />
+          )}
+          {useMean && (
+            <ReferenceLine
+              x={mx}
+              stroke="var(--muted-foreground)"
+              strokeDasharray="4 4"
+              strokeOpacity={0.55}
+              label={{ value: "均值", position: "top", fill: "var(--muted-foreground)", fontSize: 10 }}
+            />
+          )}
+          {useMean && (
+            <ReferenceLine
+              y={my}
+              stroke="var(--muted-foreground)"
+              strokeDasharray="4 4"
+              strokeOpacity={0.55}
+            />
+          )}
           <XAxis
             type="number"
             dataKey={props.xKey}

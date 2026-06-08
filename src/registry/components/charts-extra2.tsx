@@ -82,12 +82,16 @@ export const extraChartRenderers2: Pick<
             const delta = e - s;
             const dir = grew ? "var(--success)" : "var(--destructive)";
             return (
-              <div key={i} className="grid gap-1.5">
-                <div className="flex items-baseline justify-between gap-2 text-sm">
+              <div key={i} className="grid gap-1">
+                <div className="flex items-baseline justify-between gap-2 text-[13px]">
                   <span className="truncate font-medium">{String(r[props.labelKey] ?? "")}</span>
-                  <span className="font-num shrink-0 text-xs" style={{ color: dir }}>
-                    {grew ? "+" : "−"}
-                    {formatNumber(Math.abs(delta), vf)}
+                  <span className="font-num shrink-0 text-xs text-muted-foreground">
+                    {formatNumber(s, vf)} <span className="text-muted-foreground/50">→</span>{" "}
+                    {formatNumber(e, vf)}
+                    <span className="ml-1.5 font-medium" style={{ color: dir }}>
+                      {grew ? "+" : "−"}
+                      {formatNumber(Math.abs(delta), vf)}
+                    </span>
                   </span>
                 </div>
                 <div className="relative h-3">
@@ -103,9 +107,6 @@ export const extraChartRenderers2: Pick<
                     className="absolute top-1/2 size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-card"
                     style={{ left: `${ep}%`, background: "var(--chart-1)" }}
                   />
-                </div>
-                <div className="font-num text-xs text-muted-foreground">
-                  {startLabel} {formatNumber(s, vf)} → {endLabel} {formatNumber(e, vf)}
                 </div>
               </div>
             );
