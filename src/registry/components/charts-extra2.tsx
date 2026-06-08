@@ -70,7 +70,7 @@ export const extraChartRenderers2: Pick<
     return (
       <Card className="h-full gap-3 py-3">
         <Head title={props.title} subtitle={props.subtitle} extra={legend} />
-        <CardContent className="flex flex-col gap-3.5">
+        <CardContent className="flex flex-col gap-2.5">
           {rows.map((r, i) => {
             const s = num(r[props.startKey]);
             const e = num(r[props.endKey]);
@@ -191,10 +191,10 @@ export const extraChartRenderers2: Pick<
     const cell = (v: number) => {
       if (diverging) {
         const base = v >= 0 ? "var(--success)" : "var(--destructive)";
-        const pct = Math.min(85, Math.max(6, (Math.abs(v) / maxAbs) * 100));
+        const pct = Math.min(70, Math.max(6, (Math.abs(v) / maxAbs) * 100));
         return `color-mix(in srgb, ${base} ${pct}%, transparent)`;
       }
-      const pct = Math.min(85, Math.max(6, ((v - minV) / (maxV - minV || 1)) * 100));
+      const pct = Math.min(70, Math.max(6, ((v - minV) / (maxV - minV || 1)) * 100));
       return `color-mix(in srgb, var(--chart-1) ${pct}%, transparent)`;
     };
     return (

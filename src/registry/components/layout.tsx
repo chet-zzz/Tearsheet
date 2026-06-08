@@ -42,7 +42,7 @@ export const layoutRenderers: Pick<
           <p className="text-xs text-muted-foreground">数据更新：{props.updatedAt}</p>
         )}
       </header>
-      <div className="flex flex-col gap-4">{children}</div>
+      <div className="flex flex-col gap-7">{children}</div>
     </div>
   ),
 
@@ -51,9 +51,9 @@ export const layoutRenderers: Pick<
     <section className="flex flex-col gap-3">
       {props.title && (
         <div className="flex items-baseline gap-2">
-          <h2 className="text-sm font-medium text-muted-foreground">{props.title}</h2>
+          <h2 className="text-sm font-semibold tracking-tight text-foreground">{props.title}</h2>
           {props.description && (
-            <span className="text-xs text-muted-foreground/70">{props.description}</span>
+            <span className="text-xs text-muted-foreground">{props.description}</span>
           )}
         </div>
       )}

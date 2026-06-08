@@ -61,7 +61,7 @@
     },
     "grid-rev": {
       "type": "Grid",
-      "props": { "gap": "sm", "spans": [4, 8] },
+      "props": { "gap": "sm", "spans": [6, 6] },
       "children": ["rev-rank", "cost-structure"]
     },
     "rev-rank": {
@@ -110,8 +110,8 @@
     },
     "grid-cash": {
       "type": "Grid",
-      "props": { "gap": "sm", "spans": [6, 6, 12] },
-      "children": ["cash-matrix", "cfo-ni", "fcf-capex"]
+      "props": { "gap": "sm", "spans": [6, 6, 8, 4] },
+      "children": ["cash-matrix", "fcf-capex", "cfo-ni", "insight-2"]
     },
     "cash-matrix": {
       "type": "ScatterChart",
@@ -144,7 +144,7 @@
         "xKey": "company",
         "valueFormat": "percent",
         "showValues": true,
-        "height": 240,
+        "height": 260,
         "series": [
           { "key": "fcf_margin", "label": "自由现金流率%" },
           { "key": "capex_intensity", "label": "资本开支率%" }
@@ -161,8 +161,8 @@
     },
     "grid-insight": {
       "type": "Grid",
-      "props": { "gap": "sm", "spans": [4, 4, 4] },
-      "children": ["insight-1", "insight-2", "insight-3"]
+      "props": { "gap": "sm", "spans": [6, 6] },
+      "children": ["insight-1", "insight-3"]
     },
     "insight-1": {
       "type": "Insight",

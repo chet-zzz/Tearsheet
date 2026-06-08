@@ -61,7 +61,7 @@
 :root,
 [data-theme="base"] {
   --radius: 0.625rem;
-  --background: hsl(0 0% 100%);
+  --background: hsl(240 18% 97.5%);
   --foreground: hsl(240 10% 3.9%);
   --card: hsl(0 0% 100%);
   --card-foreground: hsl(240 10% 3.9%);
@@ -92,7 +92,7 @@
 /* ---- vega（用户示例里的预设：清爽蓝） ---- */
 [data-theme="vega"] {
   --radius: 0.5rem;
-  --background: hsl(0 0% 100%);
+  --background: hsl(214 30% 97.5%);
   --foreground: hsl(222 47% 11%);
   --card: hsl(0 0% 100%);
   --card-foreground: hsl(222 47% 11%);
@@ -123,7 +123,7 @@
 /* ---- emerald（财务感：稳重绿） ---- */
 [data-theme="emerald"] {
   --radius: 0.625rem;
-  --background: hsl(150 20% 99%);
+  --background: hsl(150 22% 97.5%);
   --foreground: hsl(160 30% 12%);
   --card: hsl(0 0% 100%);
   --card-foreground: hsl(160 30% 12%);
@@ -154,7 +154,7 @@
 /* ---- violet（活力紫，偏运营/增长） ---- */
 [data-theme="violet"] {
   --radius: 0.75rem;
-  --background: hsl(0 0% 100%);
+  --background: hsl(270 28% 98%);
   --foreground: hsl(224 71% 4%);
   --card: hsl(0 0% 100%);
   --card-foreground: hsl(224 71% 4%);

@@ -26,7 +26,10 @@ import {
 // ---- 通用样式（引用 CSS 变量，随主题变化） ----
 export const axisTick = { fill: "var(--muted-foreground)", fontSize: 12 } as const;
 export const legendProps = {
-  wrapperStyle: { fontSize: 12, paddingTop: 4 },
+  verticalAlign: "top" as const,
+  align: "right" as const,
+  height: 24,
+  wrapperStyle: { fontSize: 11, top: -2, right: 0 },
   iconType: "circle" as const,
   iconSize: 8,
 };

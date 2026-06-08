@@ -113,6 +113,7 @@ export const chartRenderers: Pick<
               fill={chartColor(i)}
               stackId={props.stacked || props.stack100 ? "stack" : undefined}
               radius={props.horizontal ? [0, 4, 4, 0] : [4, 4, 0, 0]}
+              maxBarSize={props.stacked || props.stack100 ? 56 : 40}
               isAnimationActive={false}
             >
               {single &&
@@ -284,6 +285,7 @@ export const chartRenderers: Pick<
               name={s.label ?? s.key}
               fill={chartColor(i)}
               radius={[4, 4, 0, 0]}
+              maxBarSize={44}
               isAnimationActive={false}
             />
           ))}

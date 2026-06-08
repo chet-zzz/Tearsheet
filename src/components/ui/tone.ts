@@ -8,11 +8,3 @@ export const toneBadge: Record<Tone, string> = {
   critical: "bg-destructive/15 text-destructive",
   neutral: "bg-muted text-muted-foreground",
 };
-
-export const toneBar: Record<Tone, string> = {
-  info: "border-l-primary",
-  positive: "border-l-success",
-  warning: "border-l-amber-500",
-  critical: "border-l-destructive",
-  neutral: "border-l-border",
-};
