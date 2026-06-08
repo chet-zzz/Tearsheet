@@ -86,6 +86,32 @@ reports/<your-id>/
 
 ⚠️ `RadarChart` 慎用——多单位/一家独大会拉成尖刺失真；速度表别用，达成率用 `BulletChart`/`RadialStat`。
 
+### 截面对比（多主体横向比，如多公司/多区域/多产品）专项
+
+依据 equity research comp sheet、FT Visual Vocabulary、IBCS、Tufte/Few/Knaflic 的共识：**小 N（5–10 个主体）多指标对比，骨架是一张高信息密度的 comp 对比表**，而不是一堆低密度大图。原因：只有表能在一屏内承载「多主体 × 多异质单位指标（$/%/×倍数）」并保留精确值。
+
+**怎么做高密度 comp 表**（`DataTable` 已支持，按列设 `mode`）：
+- `mode:"bar"`：单元格内嵌条形（编码量级，省掉一张排行柱图）——给营收/规模列。
+- `mode:"heat"`：单元格色阶背景（越强越深，一眼定强弱）——给利润率/现金流率/各种率值列。
+- `mode:"plain"`（默认）+ `digits`：精确值列（如现金转化倍数设 `digits:2`）。
+- 列按语义**分组排列**（规模 → 盈利 → 现金流 → 资本开支），行按主营指标 `sortBy` 排序。
+
+**分析意图 → 推荐图型速查（截面对比）**：
+
+| 意图 | 首选 | 备选 | 避免 |
+|------|------|------|------|
+| 总览多主体多指标 | **comp 表**（bar + heat） | small multiples | KPI 卡墙 |
+| 规模排名 | 排序横向/纵向 `BarChart`（`sort`+`highlight`） | 表内 `bar` 列、点图 | 饼图 |
+| 成本/份额构成 | `BarChart` `stack100`（开 `showValues` 标段内%） | 表内分段 | 多个饼图并排 |
+| 盈利能力对比 | 排序 `BarChart` / 表内 `heat` | — | 多系列雷达 |
+| 现金流质量/达标 | `BulletChart`、表内 heat | `DumbbellChart` | gauge 仪表盘 |
+| 相关性 / 离群 | `ScatterChart`（**开 `quadrantMean`** 加均值十字 + 优势区） | — | 无标注低密度散点 |
+| 两期 / 两情景变化 | `DumbbellChart` / `SlopeChart` | diverging bar | 双饼对比 |
+
+**四大反模式（截面对比里最常翻车）**：① 多主体并排饼图（跨饼比段不可能）；② 多系列雷达（面积随值平方膨胀、多单位混轴误导）；③ **KPI 卡墙**（一排大数字无法横向比、无名次无趋势）；④ 低密度散点（7 个点撒在大方块、无基准无标注）。
+
+**小 N 防空旷**：以一张 comp 表打底；散点务必 `nameKey` 直接贴名 + `quadrantMean` 给基准；用点图/`bar` 列替代肥柱；坐标范围贴合数据。
+
 ## 让它"专业"（这些写进 spec，其余自动）
 
 - **`title` 写结论句**：「营收同比 +12%，华东领涨」而非「营收图」。靠卡片标题分组，少用 `Section`。
