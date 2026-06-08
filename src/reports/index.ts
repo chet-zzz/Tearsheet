@@ -40,7 +40,7 @@ const csvs = import.meta.glob("../../reports/*/*.csv", {
   import: "default",
 }) as Record<string, string>;
 
-/** ".../reports/finance-q2/meta.json" → "finance-q2" */
+/** ".../reports/m7-comparison/meta.json" → "m7-comparison" */
 function idFromPath(path: string): string {
   const m = path.match(/\/reports\/([^/]+)\//);
   return m ? m[1] : path;

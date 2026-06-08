@@ -39,6 +39,8 @@ reports/<your-id>/
 可用聚合：`sum/avg/min/max/count/distinctCount/groupBy/topN/sortBy/filter/delta/percentOf/format`（详见 AGENTS.md）。
 图表的 `data` 必须是**行数组**：直接绑 `/datasets/<id>/rows`，或绑 `sortBy`/`topN`/`groupBy` 的结果。
 
+> 📂 **照着真例子写最快**：[`references/examples/`](references/examples/) 有几份不同场景的完整报告（单公司深度分析 / 通用财务概览 / HR 漏斗 / 多公司对比），每份含 `meta.json`+`report.json`+`csv`，并有 [`examples/README.md`](references/examples/README.md) 的「场景→组件」对照表。要用就整个文件夹拷进 `reports/`。（项目根的 `reports/m7-comparison` 是应用默认加载的那份对比样例。）
+
 ---
 
 ## ★ 排版的灵魂：图表形状 → box 尺寸（最容易翻车，重点看）

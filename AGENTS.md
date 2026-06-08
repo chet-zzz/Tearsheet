@@ -79,7 +79,7 @@ month,revenue,profit
 }
 ```
 
-完整可参照已有示例：[`reports/finance-q2/`](reports/finance-q2/)。
+完整可参照例子：项目根的 [`reports/m7-comparison/`](reports/m7-comparison/)（应用默认加载的对比样例），以及 skill 例子库 [`.claude/skills/tearsheet-report/references/examples/`](.claude/skills/tearsheet-report/references/examples/)（单公司深度分析 / 通用财务概览 / HR 漏斗，含「场景→组件」对照表）。
 
 ## 数据绑定：把数据接到组件
 
