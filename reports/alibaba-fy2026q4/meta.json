@@ -1,0 +1,10 @@
+{
+  "title": "阿里巴巴 FY2026 Q4 业绩概览",
+  "description": "截至 2026-03-31 季度，数据源：SEC EDGAR 6-K（accession 0001104659-26-060224）",
+  "datasets": {
+    "summary": "summary.csv",
+    "segments": "segments.csv",
+    "bridge": "bridge.csv",
+    "quarterly": "quarterly.csv"
+  }
+}

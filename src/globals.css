@@ -1,0 +1,221 @@
+@import "tailwindcss";
+
+/*
+ * 设计令牌遵循 shadcn 约定：组件只引用语义化变量（bg-background、text-muted-foreground、
+ * fill-chart-1 ...），具体色值由 [data-theme] 决定。换主题 = 换这组变量，组件与 spec 均不动。
+ *
+ * @theme inline 把语义变量映射成 Tailwind 工具类。inline 表示运行时引用 var()，
+ * 所以在 [data-theme] 下覆盖 --background 等即可实时换肤。
+ */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/*
+ * 字体令牌（与主题正交，不随 data-theme 变）。两套字栈：
+ *   --font-sans 正文：人文黑(PingFang/思源)，小字号可读、长文不累，适合严肃汇报。
+ *   --font-num  数字：西文字体(Inter/系统)排在中文前 → 数字/英文命中等宽数字字体，
+ *               中文逐字回退到 PingFang。金额/KPI/表格用它，配 tabular-nums 列对齐不跳动。
+ * 默认走系统字栈（零网络成本）；要跨 Win/安卓像素级一致再自托管 Inter + 思源子集。
+ */
+@theme {
+  --font-sans:
+    "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", "Source Han Sans SC",
+    "Noto Sans CJK SC", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  --font-num:
+    "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica,
+    "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+/* ---- base（默认中性主题，初次绘制用） ---- */
+:root,
+[data-theme="base"] {
+  --radius: 0.625rem;
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(240 10% 3.9%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(240 10% 3.9%);
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(240 10% 3.9%);
+  --primary: hsl(240 5.9% 10%);
+  --primary-foreground: hsl(0 0% 98%);
+  --secondary: hsl(240 4.8% 95.9%);
+  --secondary-foreground: hsl(240 5.9% 10%);
+  --muted: hsl(240 4.8% 95.9%);
+  --muted-foreground: hsl(240 3.8% 46.1%);
+  --accent: hsl(240 4.8% 95.9%);
+  --accent-foreground: hsl(240 5.9% 10%);
+  --destructive: hsl(4 56% 53%);
+  --destructive-foreground: hsl(0 0% 98%);
+  --success: hsl(152 40% 42%);
+  --success-foreground: hsl(0 0% 98%);
+  --border: hsl(240 5.9% 90%);
+  --input: hsl(240 5.9% 90%);
+  --ring: hsl(240 5.9% 10%);
+  --chart-1: hsl(215 46% 52%);
+  --chart-2: hsl(165 38% 44%);
+  --chart-3: hsl(35 48% 55%);
+  --chart-4: hsl(255 32% 62%);
+  --chart-5: hsl(342 38% 60%);
+}
+
+/* ---- vega（用户示例里的预设：清爽蓝） ---- */
+[data-theme="vega"] {
+  --radius: 0.5rem;
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(222 47% 11%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(222 47% 11%);
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(222 47% 11%);
+  --primary: hsl(214 56% 54%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(210 40% 96%);
+  --secondary-foreground: hsl(222 47% 11%);
+  --muted: hsl(210 40% 96%);
+  --muted-foreground: hsl(215 16% 47%);
+  --accent: hsl(214 95% 93%);
+  --accent-foreground: hsl(217 91% 35%);
+  --destructive: hsl(4 56% 53%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --success: hsl(152 40% 42%);
+  --success-foreground: hsl(0 0% 100%);
+  --border: hsl(214 32% 91%);
+  --input: hsl(214 32% 91%);
+  --ring: hsl(214 56% 54%);
+  --chart-1: hsl(214 56% 54%);
+  --chart-2: hsl(190 50% 47%);
+  --chart-3: hsl(252 38% 64%);
+  --chart-4: hsl(160 40% 44%);
+  --chart-5: hsl(32 52% 56%);
+}
+
+/* ---- emerald（财务感：稳重绿） ---- */
+[data-theme="emerald"] {
+  --radius: 0.625rem;
+  --background: hsl(150 20% 99%);
+  --foreground: hsl(160 30% 12%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(160 30% 12%);
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(160 30% 12%);
+  --primary: hsl(160 44% 41%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(150 30% 95%);
+  --secondary-foreground: hsl(160 30% 18%);
+  --muted: hsl(150 30% 95%);
+  --muted-foreground: hsl(155 12% 42%);
+  --accent: hsl(152 56% 90%);
+  --accent-foreground: hsl(160 84% 25%);
+  --destructive: hsl(4 56% 53%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --success: hsl(160 44% 41%);
+  --success-foreground: hsl(0 0% 100%);
+  --border: hsl(150 20% 89%);
+  --input: hsl(150 20% 89%);
+  --ring: hsl(160 44% 41%);
+  --chart-1: hsl(160 44% 41%);
+  --chart-2: hsl(175 38% 40%);
+  --chart-3: hsl(198 46% 47%);
+  --chart-4: hsl(42 52% 52%);
+  --chart-5: hsl(135 34% 47%);
+}
+
+/* ---- violet（活力紫，偏运营/增长） ---- */
+[data-theme="violet"] {
+  --radius: 0.75rem;
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(224 71% 4%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(224 71% 4%);
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(224 71% 4%);
+  --primary: hsl(258 44% 59%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(270 40% 96%);
+  --secondary-foreground: hsl(262 47% 25%);
+  --muted: hsl(270 40% 96%);
+  --muted-foreground: hsl(260 10% 48%);
+  --accent: hsl(269 80% 94%);
+  --accent-foreground: hsl(262 83% 40%);
+  --destructive: hsl(4 56% 53%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --success: hsl(152 40% 42%);
+  --success-foreground: hsl(0 0% 100%);
+  --border: hsl(270 20% 90%);
+  --input: hsl(270 20% 90%);
+  --ring: hsl(258 44% 59%);
+  --chart-1: hsl(258 44% 59%);
+  --chart-2: hsl(292 36% 57%);
+  --chart-3: hsl(318 40% 58%);
+  --chart-4: hsl(220 46% 60%);
+  --chart-5: hsl(192 46% 48%);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    /* 全局等宽数字：金额/百分比成列对齐，数值变化时 UI 不抖动；calt 改善混排连写 */
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1, "calt" 1;
+    line-height: 1.6; /* 中文正文行高高于西文，1.6 为安全下限 */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+/*
+ * 排版工具类（组件按用途挂载）。字阶按信息密集看板收紧（模数 ~1.2），
+ * 中文不套西文 1.5 比例（中文字面大、留白少，比例太大显空）。
+ */
+@layer components {
+  /* 数字专用字栈 + 等宽（KPI 大数字、金额单元格、tooltip 数值） */
+  .font-num {
+    font-family: var(--font-num);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+  }
+  /* 大数字微负字距收紧，紧行高更聚焦 */
+  .num-display {
+    font-family: var(--font-num);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+}

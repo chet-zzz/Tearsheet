@@ -1,0 +1,139 @@
+{
+  "root": "page",
+  "elements": {
+    "page": {
+      "type": "Page",
+      "props": {
+        "title": "人力资源概览",
+        "subtitle": "编制、招聘与流失",
+        "updatedAt": "2026-06-07"
+      },
+      "children": ["grid"]
+    },
+
+    "grid": {
+      "type": "Grid",
+      "props": { "spans": [4, 4, 4, 8, 4, 4, 8, 12] },
+      "children": [
+        "kpi-total",
+        "kpi-openings",
+        "kpi-attrition",
+        "trend-area",
+        "dept-list",
+        "recruit-funnel",
+        "dept-table",
+        "dept-insight"
+      ]
+    },
+
+    "kpi-total": {
+      "type": "KpiCard",
+      "props": {
+        "label": "总人数",
+        "icon": "users",
+        "format": "number",
+        "unit": "人",
+        "value": {
+          "$computed": "sum",
+          "args": { "rows": { "$state": "/datasets/dept/rows" }, "field": "headcount" }
+        },
+        "trend": { "$state": "/datasets/monthly/rows" },
+        "trendKey": "headcount"
+      },
+      "children": []
+    },
+    "kpi-openings": {
+      "type": "KpiCard",
+      "props": {
+        "label": "在招岗位",
+        "icon": "target",
+        "format": "number",
+        "unit": "个",
+        "value": {
+          "$computed": "sum",
+          "args": { "rows": { "$state": "/datasets/dept/rows" }, "field": "openings" }
+        }
+      },
+      "children": []
+    },
+    "kpi-attrition": {
+      "type": "KpiCard",
+      "props": {
+        "label": "平均月流失率",
+        "icon": "percent",
+        "format": "percent",
+        "value": {
+          "$computed": "avg",
+          "args": { "rows": { "$state": "/datasets/monthly/rows" }, "field": "attrition" }
+        },
+        "trend": { "$state": "/datasets/monthly/rows" },
+        "trendKey": "attrition"
+      },
+      "children": []
+    },
+
+    "trend-area": {
+      "type": "AreaChart",
+      "props": {
+        "title": "编制趋势",
+        "subtitle": "月度在编人数",
+        "xKey": "month",
+        "height": 230,
+        "showValues": true,
+        "series": [{ "key": "headcount", "label": "在编人数" }],
+        "data": { "$state": "/datasets/monthly/rows" }
+      },
+      "children": []
+    },
+    "dept-list": {
+      "type": "StatList",
+      "props": {
+        "title": "各部门编制",
+        "icon": "users",
+        "valueFormat": "number",
+        "labelKey": "dept",
+        "valueKey": "headcount",
+        "data": {
+          "$computed": "sortBy",
+          "args": { "rows": { "$state": "/datasets/dept/rows" }, "field": "headcount", "dir": "desc" }
+        }
+      },
+      "children": []
+    },
+    "recruit-funnel": {
+      "type": "FunnelChart",
+      "props": {
+        "title": "招聘漏斗",
+        "subtitle": "各环节留存",
+        "nameKey": "stage",
+        "valueKey": "count",
+        "height": 230,
+        "data": { "$state": "/datasets/funnel/rows" }
+      },
+      "children": []
+    },
+    "dept-table": {
+      "type": "DataTable",
+      "props": {
+        "caption": "各部门编制与在招",
+        "pageSize": 10,
+        "columns": [
+          { "key": "dept", "label": "部门", "align": "left", "format": "text" },
+          { "key": "headcount", "label": "在编", "align": "right", "format": "number" },
+          { "key": "openings", "label": "在招", "align": "right", "format": "number" }
+        ],
+        "data": { "$state": "/datasets/dept/rows" }
+      },
+      "children": []
+    },
+    "dept-insight": {
+      "type": "Insight",
+      "props": {
+        "title": "关注点",
+        "content": "招聘漏斗从投递到录用整体转化约 3%，终面到录用转化偏低；客服部在招最多但在编最少，扩张压力集中在该团队。",
+        "tone": "warning"
+      },
+      "children": []
+    }
+  }
+}

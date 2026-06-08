@@ -1,0 +1,9 @@
+{
+  "title": "人力资源概览",
+  "description": "编制、招聘与流失",
+  "datasets": {
+    "monthly": "monthly.csv",
+    "dept": "dept.csv",
+    "funnel": "funnel.csv"
+  }
+}

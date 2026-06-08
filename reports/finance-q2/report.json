@@ -1,0 +1,250 @@
+{
+  "root": "page",
+  "elements": {
+    "page": {
+      "type": "Page",
+      "props": {
+        "title": "Q2 财务概览",
+        "subtitle": "营收、成本、利润与区域分布",
+        "updatedAt": "2026-06-07"
+      },
+      "children": ["grid"]
+    },
+
+    "grid": {
+      "type": "Grid",
+      "props": { "spans": [3, 3, 3, 3, 8, 4, 8, 4, 4, 4, 4, 6, 6] },
+      "children": [
+        "kpi-rev",
+        "kpi-cost",
+        "kpi-profit",
+        "kpi-cust",
+        "trend-area",
+        "margin-radial",
+        "bridge",
+        "bullet",
+        "region-pie",
+        "region-list",
+        "cust-scatter",
+        "cust-table",
+        "insight-region"
+      ]
+    },
+
+    "kpi-rev": {
+      "type": "KpiCard",
+      "props": {
+        "label": "总营收",
+        "icon": "revenue",
+        "format": "currency",
+        "value": {
+          "$computed": "sum",
+          "args": { "rows": { "$state": "/datasets/monthly/rows" }, "field": "revenue" }
+        },
+        "delta": 12.5,
+        "deltaLabel": "同比",
+        "trend": { "$state": "/datasets/monthly/rows" },
+        "trendKey": "revenue"
+      },
+      "children": []
+    },
+    "kpi-cost": {
+      "type": "KpiCard",
+      "props": {
+        "label": "总成本",
+        "icon": "cost",
+        "format": "currency",
+        "value": {
+          "$computed": "sum",
+          "args": { "rows": { "$state": "/datasets/monthly/rows" }, "field": "cost" }
+        },
+        "delta": 8.2,
+        "deltaLabel": "同比",
+        "trend": { "$state": "/datasets/monthly/rows" },
+        "trendKey": "cost"
+      },
+      "children": []
+    },
+    "kpi-profit": {
+      "type": "KpiCard",
+      "props": {
+        "label": "总利润",
+        "icon": "profit",
+        "format": "currency",
+        "value": {
+          "$computed": "sum",
+          "args": { "rows": { "$state": "/datasets/monthly/rows" }, "field": "profit" }
+        },
+        "delta": 18.7,
+        "deltaLabel": "同比",
+        "trend": { "$state": "/datasets/monthly/rows" },
+        "trendKey": "profit"
+      },
+      "children": []
+    },
+    "kpi-cust": {
+      "type": "KpiCard",
+      "props": {
+        "label": "活跃客户",
+        "icon": "customers",
+        "format": "number",
+        "unit": "家",
+        "value": {
+          "$computed": "count",
+          "args": { "rows": { "$state": "/datasets/customers/rows" } }
+        }
+      },
+      "children": []
+    },
+
+    "trend-area": {
+      "type": "AreaChart",
+      "props": {
+        "title": "经营趋势：营收与利润逐月走高",
+        "subtitle": "月度营收 / 利润（元）",
+        "xKey": "month",
+        "height": 230,
+        "valueFormat": "currency",
+        "showValues": true,
+        "refLines": [{ "y": 1500000, "label": "月营收目标", "tone": "positive" }],
+        "series": [
+          { "key": "revenue", "label": "营收" },
+          { "key": "profit", "label": "利润" }
+        ],
+        "data": { "$state": "/datasets/monthly/rows" }
+      },
+      "children": []
+    },
+    "margin-radial": {
+      "type": "RadialStat",
+      "props": {
+        "label": "毛利率",
+        "format": "percent",
+        "caption": "总利润 / 总营收",
+        "value": {
+          "$computed": "percentOf",
+          "args": {
+            "part": {
+              "$computed": "sum",
+              "args": { "rows": { "$state": "/datasets/monthly/rows" }, "field": "profit" }
+            },
+            "whole": {
+              "$computed": "sum",
+              "args": { "rows": { "$state": "/datasets/monthly/rows" }, "field": "revenue" }
+            }
+          }
+        }
+      },
+      "children": []
+    },
+
+    "bridge": {
+      "type": "WaterfallChart",
+      "props": {
+        "title": "利润桥：从营收到净利",
+        "subtitle": "Q2 累计，绿增红减",
+        "xKey": "item",
+        "valueKey": "value",
+        "totalKey": "total",
+        "valueFormat": "currency",
+        "height": 230,
+        "data": { "$state": "/datasets/bridge/rows" }
+      },
+      "children": []
+    },
+    "bullet": {
+      "type": "BulletChart",
+      "props": {
+        "title": "区域营收达成",
+        "subtitle": "实际 vs 目标",
+        "labelKey": "region",
+        "valueKey": "revenue",
+        "targetKey": "target",
+        "valueFormat": "currency",
+        "data": {
+          "$computed": "sortBy",
+          "args": { "rows": { "$state": "/datasets/region/rows" }, "field": "revenue", "dir": "desc" }
+        }
+      },
+      "children": []
+    },
+
+    "region-pie": {
+      "type": "PieChart",
+      "props": {
+        "title": "区域构成",
+        "nameKey": "region",
+        "valueKey": "revenue",
+        "donut": true,
+        "height": 220,
+        "valueFormat": "currency",
+        "data": { "$state": "/datasets/region/rows" }
+      },
+      "children": []
+    },
+    "region-list": {
+      "type": "StatList",
+      "props": {
+        "title": "各区域营收",
+        "icon": "building",
+        "valueFormat": "currency",
+        "labelKey": "region",
+        "valueKey": "revenue",
+        "data": {
+          "$computed": "sortBy",
+          "args": { "rows": { "$state": "/datasets/region/rows" }, "field": "revenue", "dir": "desc" }
+        }
+      },
+      "children": []
+    },
+    "cust-scatter": {
+      "type": "ScatterChart",
+      "props": {
+        "title": "客户分布",
+        "subtitle": "订单数 vs 成交额，气泡=成交额",
+        "xKey": "orders",
+        "yKey": "amount",
+        "sizeKey": "amount",
+        "nameKey": "customer",
+        "xLabel": "订单数",
+        "yLabel": "成交额",
+        "valueFormat": "currency",
+        "height": 220,
+        "data": { "$state": "/datasets/customers/rows" }
+      },
+      "children": []
+    },
+
+    "cust-table": {
+      "type": "DataTable",
+      "props": {
+        "caption": "Top 5 客户",
+        "pageSize": 5,
+        "columns": [
+          { "key": "customer", "label": "客户", "align": "left", "format": "text" },
+          { "key": "orders", "label": "订单", "align": "right", "format": "number" },
+          { "key": "amount", "label": "成交额", "align": "right", "format": "currency" }
+        ],
+        "data": {
+          "$computed": "topN",
+          "args": {
+            "rows": { "$state": "/datasets/customers/rows" },
+            "field": "amount",
+            "n": 5
+          }
+        }
+      },
+      "children": []
+    },
+
+    "insight-region": {
+      "type": "Insight",
+      "props": {
+        "title": "关键发现",
+        "content": "华东区贡献最高营收并超额达成（109%），是增长核心；西南区达成率仅 84%，需重点跟进。Q2 毛利率稳定在 41.6%。",
+        "tone": "positive"
+      },
+      "children": []
+    }
+  }
+}

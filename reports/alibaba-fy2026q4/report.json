@@ -1,0 +1,284 @@
+{
+  "root": "page",
+  "elements": {
+    "page": {
+      "type": "Page",
+      "props": {
+        "title": "阿里巴巴 2026 财年 Q4 业绩深度分析",
+        "subtitle": "当季拆解 + 八季度趋势对比 · 单位：亿元人民币 · 数据源：SEC EDGAR 6-K（4 份季报）",
+        "updatedAt": "2026-05-13"
+      },
+      "children": ["sec-overview", "sec-trend", "sec-breakdown", "sec-insight"]
+    },
+
+    "sec-overview": {
+      "type": "Section",
+      "props": { "title": "当季概览", "description": "FY2026 Q4，截至 2026-03-31" },
+      "children": ["grid-kpi"]
+    },
+    "grid-kpi": {
+      "type": "Grid",
+      "props": { "gap": "sm", "spans": [2, 2, 2, 2, 2, 2] },
+      "children": ["kpi-rev", "kpi-op", "kpi-net", "kpi-ebita", "kpi-fcf", "kpi-nongaap"]
+    },
+
+    "kpi-rev": {
+      "type": "KpiCard",
+      "props": {
+        "label": "总收入", "icon": "revenue", "format": "number", "unit": "亿",
+        "value": { "$computed": "sum", "args": { "rows": { "$state": "/datasets/summary/rows" }, "field": "revenue" } },
+        "delta": { "$computed": "sum", "args": { "rows": { "$state": "/datasets/summary/rows" }, "field": "revenue_yoy" } },
+        "deltaLabel": "同比"
+      },
+      "children": []
+    },
+    "kpi-op": {
+      "type": "KpiCard",
+      "props": {
+        "label": "经营利润", "icon": "alert", "format": "number", "digits": 1, "unit": "亿",
+        "value": { "$computed": "sum", "args": { "rows": { "$state": "/datasets/summary/rows" }, "field": "op_loss" } }
+      },
+      "children": []
+    },
+    "kpi-net": {
+      "type": "KpiCard",
+      "props": {
+        "label": "净利润", "icon": "profit", "format": "number", "unit": "亿",
+        "value": { "$computed": "sum", "args": { "rows": { "$state": "/datasets/summary/rows" }, "field": "net_income" } },
+        "delta": { "$computed": "sum", "args": { "rows": { "$state": "/datasets/summary/rows" }, "field": "net_income_yoy" } },
+        "deltaLabel": "同比"
+      },
+      "children": []
+    },
+    "kpi-ebita": {
+      "type": "KpiCard",
+      "props": {
+        "label": "调整后 EBITA", "icon": "chart", "format": "number", "unit": "亿",
+        "value": { "$computed": "sum", "args": { "rows": { "$state": "/datasets/summary/rows" }, "field": "adj_ebita" } },
+        "delta": { "$computed": "sum", "args": { "rows": { "$state": "/datasets/summary/rows" }, "field": "adj_ebita_yoy" } },
+        "deltaLabel": "同比"
+      },
+      "children": []
+    },
+    "kpi-fcf": {
+      "type": "KpiCard",
+      "props": {
+        "label": "自由现金流", "icon": "cost", "format": "number", "unit": "亿",
+        "value": { "$computed": "sum", "args": { "rows": { "$state": "/datasets/summary/rows" }, "field": "fcf" } }
+      },
+      "children": []
+    },
+    "kpi-nongaap": {
+      "type": "KpiCard",
+      "props": {
+        "label": "Non-GAAP 净利", "icon": "percent", "format": "number", "digits": 1, "unit": "亿",
+        "value": { "$computed": "sum", "args": { "rows": { "$state": "/datasets/summary/rows" }, "field": "non_gaap" } },
+        "delta": { "$computed": "sum", "args": { "rows": { "$state": "/datasets/summary/rows" }, "field": "non_gaap_yoy" } },
+        "deltaLabel": "同比"
+      },
+      "children": []
+    },
+
+    "sec-trend": {
+      "type": "Section",
+      "props": {
+        "title": "八个季度趋势对比",
+        "description": "2024-06 → 2026-03，取自最近 4 份季度 6-K 的本季 + 去年同期列"
+      },
+      "children": ["grid-trend"]
+    },
+    "grid-trend": {
+      "type": "Grid",
+      "props": { "gap": "sm", "spans": [6, 6, 4, 4, 4] },
+      "children": ["area-rev", "margin-line", "op-bar", "opnet-line", "cloud-combo"]
+    },
+
+    "area-rev": {
+      "type": "AreaChart",
+      "props": {
+        "title": "营收平稳，同比仅 +2~5%",
+        "subtitle": "季度营收(亿)；Q3(12 月)为双十一旺季",
+        "xKey": "quarter",
+        "showValues": true,
+        "valueFormat": "number",
+        "height": 200,
+        "series": [{ "key": "revenue", "label": "营收" }],
+        "data": { "$state": "/datasets/quarterly/rows" }
+      },
+      "children": []
+    },
+    "margin-line": {
+      "type": "LineChart",
+      "props": {
+        "title": "盈利能力三连降，跌出历史健康区",
+        "subtitle": "经营利润率 / 调整后 EBITA 利润率(%)",
+        "xKey": "quarter",
+        "smooth": true,
+        "valueFormat": "percent",
+        "height": 200,
+        "band": { "from": 12, "to": 20, "label": "历史健康区", "tone": "positive" },
+        "refLines": [{ "y": 0, "label": "盈亏线", "tone": "critical" }],
+        "series": [
+          { "key": "ebita_margin", "label": "EBITA 利润率%" },
+          { "key": "op_margin", "label": "经营利润率%" }
+        ],
+        "data": { "$state": "/datasets/quarterly/rows" }
+      },
+      "children": []
+    },
+    "op-bar": {
+      "type": "BarChart",
+      "props": {
+        "title": "经营利润逐季：从 ~350 亿到转亏",
+        "subtitle": "季度经营利润(亿)，绿盈红亏",
+        "xKey": "quarter",
+        "series": [{ "key": "op_income", "label": "经营利润" }],
+        "diverging": true,
+        "showValues": true,
+        "valueFormat": "number",
+        "height": 200,
+        "data": { "$state": "/datasets/quarterly/rows" }
+      },
+      "children": []
+    },
+    "opnet-line": {
+      "type": "LineChart",
+      "props": {
+        "title": "利润与经营背离",
+        "subtitle": "经营利润 vs 净利润(亿)",
+        "xKey": "quarter",
+        "valueFormat": "number",
+        "height": 200,
+        "refLines": [{ "y": 0, "tone": "neutral" }],
+        "series": [
+          { "key": "net_income", "label": "净利润" },
+          { "key": "op_income", "label": "经营利润" }
+        ],
+        "data": { "$state": "/datasets/quarterly/rows" }
+      },
+      "children": []
+    },
+    "cloud-combo": {
+      "type": "ComboChart",
+      "props": {
+        "title": "阿里云逆势加速：26% → 38%",
+        "subtitle": "阿里云收入(亿) + 同比%",
+        "xKey": "quarter",
+        "bars": [{ "key": "cloud_revenue", "label": "云收入" }],
+        "lines": [{ "key": "cloud_yoy", "label": "云同比%" }],
+        "secondAxis": true,
+        "valueFormat": "number",
+        "height": 200,
+        "data": { "$state": "/datasets/quarterly/rows" }
+      },
+      "children": []
+    },
+
+    "sec-breakdown": {
+      "type": "Section",
+      "props": { "title": "当季拆解", "description": "FY2026 Q4 的利润结构与分部表现" },
+      "children": ["grid-breakdown"]
+    },
+    "grid-breakdown": {
+      "type": "Grid",
+      "props": { "gap": "sm", "spans": [8, 4, 4, 4, 4] },
+      "children": ["bridge", "seg-pie", "seg-bullet", "seg-ebita", "seg-matrix"]
+    },
+
+    "bridge": {
+      "type": "WaterfallChart",
+      "props": {
+        "title": "利润桥：收入几乎被成本费用吃尽",
+        "subtitle": "收入 → 各项成本费用 → 经营亏损（亿元）",
+        "xKey": "item", "valueKey": "value", "totalKey": "total",
+        "valueFormat": "number", "height": 210,
+        "data": { "$state": "/datasets/bridge/rows" }
+      },
+      "children": []
+    },
+    "seg-pie": {
+      "type": "PieChart",
+      "props": {
+        "title": "分部收入构成", "subtitle": "抵销前（亿元）",
+        "nameKey": "segment", "valueKey": "revenue", "donut": true,
+        "height": 200, "valueFormat": "number",
+        "data": { "$state": "/datasets/segments/rows" }
+      },
+      "children": []
+    },
+    "seg-bullet": {
+      "type": "BulletChart",
+      "props": {
+        "title": "各分部收入 vs 去年同期",
+        "subtitle": "刻度=去年同期，低于刻度即萎缩（亿元）",
+        "labelKey": "segment", "valueKey": "revenue", "targetKey": "prior_revenue",
+        "valueFormat": "number",
+        "data": { "$computed": "sortBy", "args": { "rows": { "$state": "/datasets/segments/rows" }, "field": "revenue", "dir": "desc" } }
+      },
+      "children": []
+    },
+    "seg-ebita": {
+      "type": "BarChart",
+      "props": {
+        "title": "分部经营利润：补贴拖累「其他」",
+        "subtitle": "调整后 EBITA，绿盈红亏（亿元）",
+        "xKey": "segment",
+        "series": [{ "key": "ebita", "label": "调整后 EBITA" }],
+        "diverging": true, "showValues": true, "valueFormat": "number", "height": 200,
+        "data": { "$computed": "sortBy", "args": { "rows": { "$state": "/datasets/segments/rows" }, "field": "ebita", "dir": "desc" } }
+      },
+      "children": []
+    },
+    "seg-matrix": {
+      "type": "ScatterChart",
+      "props": {
+        "title": "增长 × 盈利矩阵",
+        "subtitle": "x=同比增速% · y=EBITA 利润率% · 气泡=收入",
+        "xKey": "yoy", "yKey": "margin", "sizeKey": "revenue", "nameKey": "segment",
+        "xLabel": "同比增速%", "yLabel": "EBITA 利润率%",
+        "quadrant": true, "valueFormat": "number", "height": 200,
+        "data": { "$state": "/datasets/segments/rows" }
+      },
+      "children": []
+    },
+
+    "sec-insight": {
+      "type": "Section",
+      "props": { "title": "洞察" },
+      "children": ["grid-insight"]
+    },
+    "grid-insight": {
+      "type": "Grid",
+      "props": { "gap": "sm", "spans": [4, 4, 4] },
+      "children": ["insight-1", "insight-2", "insight-3"]
+    },
+
+    "insight-1": {
+      "type": "Insight",
+      "props": {
+        "title": "经营利润三连降，本季转亏",
+        "content": "经营利润此前四个季度稳定在 285–412 亿元，但自 2025/09 季起三连降：53.6 → 106.5 → -8.5 亿元，调整后 EBITA 利润率从约 18% 压缩到 2.1%，跌出历史健康区。这不是单季扰动，而是即时零售（淘宝闪购/饿了么）补贴、Qwen AI 应用获客与云资本开支叠加的连续三季投入周期。",
+        "tone": "critical"
+      },
+      "children": []
+    },
+    "insight-2": {
+      "type": "Insight",
+      "props": {
+        "title": "阿里云是唯一确定性引擎",
+        "content": "阿里云收入连续四个季度加速，同比从 26% 升到 38%，单季收入从去年同期的 265 亿升至 416 亿；在增长×盈利矩阵中独占「高增速·正盈利」象限。AI 驱动的云需求回暖，是当前最值得加注的方向。",
+        "tone": "positive"
+      },
+      "children": []
+    },
+    "insight-3": {
+      "type": "Insight",
+      "props": {
+        "title": "盈利质量存疑：利润与现金背离",
+        "content": "本季净利润同比 +96%、却与经营面背离——经营已亏损，净利主要来自股权投资公允价值变动等非经营收益；Non-GAAP 净利润几近归零、自由现金流转为净流出 173 亿元。利润表的「好看」掩盖了经营性现金消耗，需紧盯高强度投入何时转化为盈利。",
+        "tone": "warning"
+      },
+      "children": []
+    }
+  }
+}

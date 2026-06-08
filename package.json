@@ -1,0 +1,63 @@
+{
+  "name": "tearsheet",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Agent-authored, declarative report dashboards — write a JSON spec, render deterministically. 面向非工程团队的报告脚手架。",
+  "license": "MIT",
+  "author": "chet-zzz",
+  "homepage": "https://github.com/chet-zzz/Tearsheet#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chet-zzz/Tearsheet.git"
+  },
+  "bugs": {
+    "url": "https://github.com/chet-zzz/Tearsheet/issues"
+  },
+  "keywords": [
+    "dashboard",
+    "reporting",
+    "data-visualization",
+    "declarative-ui",
+    "json-render",
+    "shadcn-ui",
+    "recharts",
+    "react",
+    "typescript",
+    "coding-agent"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@json-render/core": "^0.19.0",
+    "@json-render/react": "^0.19.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.469.0",
+    "papaparse": "^5.4.1",
+    "radix-ui": "^1.5.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "recharts": "^2.15.0",
+    "tailwind-merge": "^2.6.0",
+    "xlsx": "^0.18.5",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0",
+    "@types/node": "^25.9.2",
+    "@types/papaparse": "^5.3.15",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.0",
+    "vitest": "^2.1.8"
+  }
+}

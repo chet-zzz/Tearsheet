@@ -1,0 +1,10 @@
+{
+  "title": "Q2 财务概览",
+  "description": "营收、成本、利润与区域分布",
+  "datasets": {
+    "monthly": "monthly.csv",
+    "region": "region.csv",
+    "customers": "customers.csv",
+    "bridge": "bridge.csv"
+  }
+}
