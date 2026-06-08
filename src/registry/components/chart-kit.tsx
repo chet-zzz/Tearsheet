@@ -87,12 +87,17 @@ export function ReportTooltip({
   payload,
   label,
   valueFormat = "number",
-}: TooltipProps<number, string> & { valueFormat?: string }) {
+  labelKey,
+}: TooltipProps<number, string> & { valueFormat?: string; labelKey?: string }) {
   if (!active || !payload || payload.length === 0) return null;
+  // 优先从数据行按 labelKey(=xKey) 取类目名：某些图（如 stack100）Recharts 会把
+  // label 传成行索引而非类目值，直接读行数据更稳。
+  const row = (payload[0] as { payload?: Record<string, unknown> })?.payload;
+  const headRaw = labelKey && row && row[labelKey] != null && row[labelKey] !== "" ? row[labelKey] : label;
   return (
     <div className="rounded-lg border border-border bg-popover px-3 py-2 text-xs shadow-md">
-      {label !== undefined && label !== "" && (
-        <div className="mb-1.5 font-medium text-popover-foreground">{String(label)}</div>
+      {headRaw !== undefined && headRaw !== "" && (
+        <div className="mb-1.5 font-medium text-popover-foreground">{String(headRaw)}</div>
       )}
       <div className="grid gap-1">
         {payload.map((p, i) => (

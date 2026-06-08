@@ -132,7 +132,7 @@ export const chartRenderers: Pick<
           {!props.stack100 && renderBand(props.band)}
           {!props.stack100 && renderRefLines(props.refLines)}
           <Tooltip
-            content={<ReportTooltip valueFormat={vf} />}
+            content={<ReportTooltip valueFormat={vf} labelKey={props.xKey} />}
             cursor={{ fill: "var(--muted)", opacity: 0.4 }}
           />
           {series.length > 1 && <Legend {...legendProps} />}
@@ -195,7 +195,7 @@ export const chartRenderers: Pick<
           <YAxis tick={axisTick} tickLine={false} axisLine={false} tickFormatter={compactTick} />
           {renderBand(props.band)}
           {renderRefLines(props.refLines)}
-          <Tooltip content={<ReportTooltip valueFormat={vf} />} />
+          <Tooltip content={<ReportTooltip valueFormat={vf} labelKey={props.xKey} />} />
           {series.length > 1 && <Legend {...legendProps} />}
           {series.map((s, i) => (
             <Line
@@ -240,7 +240,7 @@ export const chartRenderers: Pick<
           <YAxis tick={axisTick} tickLine={false} axisLine={false} tickFormatter={compactTick} />
           {renderBand(props.band)}
           {renderRefLines(props.refLines)}
-          <Tooltip content={<ReportTooltip valueFormat={vf} />} />
+          <Tooltip content={<ReportTooltip valueFormat={vf} labelKey={props.xKey} />} />
           {series.length > 1 && <Legend {...legendProps} />}
           {series.map((s, i) => (
             <Area
@@ -284,7 +284,7 @@ export const chartRenderers: Pick<
               <Cell key={i} fill={chartColor(i)} />
             ))}
           </Pie>
-          <Tooltip content={<ReportTooltip valueFormat={vf} />} />
+          <Tooltip content={<ReportTooltip valueFormat={vf} labelKey={props.nameKey} />} />
           <Legend {...legendProps} />
         </RPieChart>
       </ChartFrame>
@@ -307,7 +307,7 @@ export const chartRenderers: Pick<
           )}
           {renderRefLines(props.refLines)}
           <Tooltip
-            content={<ReportTooltip valueFormat={vf} />}
+            content={<ReportTooltip valueFormat={vf} labelKey={props.xKey} />}
             cursor={{ fill: "var(--muted)", opacity: 0.4 }}
           />
           <Legend {...legendProps} />
