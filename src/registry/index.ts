@@ -6,6 +6,7 @@ import { metricRenderers } from "./components/metrics";
 import { statRenderers } from "./components/stats";
 import { chartRenderers } from "./components/charts";
 import { extraChartRenderers } from "./components/charts-extra";
+import { extraChartRenderers2 } from "./components/charts-extra2";
 import { tableRenderers } from "./components/table";
 
 /**
@@ -19,6 +20,7 @@ const components: Components<ReportCatalog> = {
   ...statRenderers,
   ...chartRenderers,
   ...extraChartRenderers,
+  ...extraChartRenderers2,
   ...tableRenderers,
 };
 

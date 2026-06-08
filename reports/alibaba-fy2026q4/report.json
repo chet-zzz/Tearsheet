@@ -8,7 +8,7 @@
         "subtitle": "当季拆解 + 八季度趋势对比 · 单位：亿元人民币 · 数据源：SEC EDGAR 6-K（4 份季报）",
         "updatedAt": "2026-05-13"
       },
-      "children": ["sec-overview", "sec-trend", "sec-breakdown", "sec-insight"]
+      "children": ["sec-overview", "sec-trend", "sec-breakdown", "sec-extra", "sec-insight"]
     },
 
     "sec-overview": {
@@ -238,6 +238,68 @@
         "xLabel": "同比增速%", "yLabel": "EBITA 利润率%",
         "quadrant": true, "valueFormat": "number", "height": 200,
         "data": { "$state": "/datasets/segments/rows" }
+      },
+      "children": []
+    },
+
+    "sec-extra": {
+      "type": "Section",
+      "props": {
+        "title": "新图型预览",
+        "description": "同一组「各分部 今年 vs 去年」的三种画法（哑铃 / 斜率 / 雷达）+ 季度利润率热力图"
+      },
+      "children": ["grid-extra"]
+    },
+    "grid-extra": {
+      "type": "Grid",
+      "props": { "gap": "sm", "spans": [4, 4, 4, 12] },
+      "children": ["seg-dumbbell", "seg-slope", "seg-radar", "margin-heatmap"]
+    },
+
+    "seg-dumbbell": {
+      "type": "DumbbellChart",
+      "props": {
+        "title": "各分部 今年 vs 去年（哑铃）",
+        "subtitle": "连线按方向着色，增绿减红（亿元）",
+        "labelKey": "segment", "startKey": "prior_revenue", "endKey": "revenue",
+        "startLabel": "去年", "endLabel": "今年", "valueFormat": "number",
+        "data": { "$computed": "sortBy", "args": { "rows": { "$state": "/datasets/segments/rows" }, "field": "revenue", "dir": "desc" } }
+      },
+      "children": []
+    },
+    "seg-slope": {
+      "type": "SlopeChart",
+      "props": {
+        "title": "各分部 去年 → 今年（斜率）",
+        "subtitle": "斜率即增速方向（亿元）",
+        "labelKey": "segment", "startKey": "prior_revenue", "endKey": "revenue",
+        "startLabel": "去年", "endLabel": "今年", "valueFormat": "number", "height": 220,
+        "data": { "$computed": "sortBy", "args": { "rows": { "$state": "/datasets/segments/rows" }, "field": "revenue", "dir": "desc" } }
+      },
+      "children": []
+    },
+    "seg-radar": {
+      "type": "RadarChart",
+      "props": {
+        "title": "各分部 今年 vs 去年（雷达）",
+        "subtitle": "形状外扩即增长（亿元）",
+        "axisKey": "segment", "valueFormat": "number", "height": 220,
+        "series": [
+          { "key": "revenue", "label": "今年" },
+          { "key": "prior_revenue", "label": "去年" }
+        ],
+        "data": { "$state": "/datasets/segments/rows" }
+      },
+      "children": []
+    },
+    "margin-heatmap": {
+      "type": "HeatmapChart",
+      "props": {
+        "title": "季度利润率热力图：自 25Q3 整体转冷",
+        "subtitle": "经营利润率 / EBITA 利润率 × 季度（%），绿热红冷",
+        "xKey": "quarter", "yKey": "metric", "valueKey": "value",
+        "diverging": true, "valueFormat": "percent",
+        "data": { "$state": "/datasets/heatmap/rows" }
       },
       "children": []
     },

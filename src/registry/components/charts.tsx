@@ -74,7 +74,15 @@ export const chartRenderers: Pick<
           <CartesianGrid {...gridProps} />
           {props.horizontal ? (
             <>
-              <XAxis type="number" tick={axisTick} tickLine={false} axisLine={false} tickFormatter={compactTick} />
+              <XAxis
+                type="number"
+                tick={axisTick}
+                tickLine={false}
+                axisLine={false}
+                tickFormatter={
+                  props.stack100 ? (v) => `${Math.round(Number(v) * 100)}%` : compactTick
+                }
+              />
               <YAxis type="category" dataKey={props.xKey} tick={axisTick} tickLine={false} axisLine={false} width={80} />
             </>
           ) : (

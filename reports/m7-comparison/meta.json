@@ -1,0 +1,7 @@
+{
+  "title": "Magnificent 7 财务对比",
+  "description": "营收规模、经营成本去向与现金流健康度，数据源：SEC EDGAR 10-K（各家最新财年）",
+  "datasets": {
+    "m7": "m7.csv"
+  }
+}

@@ -275,4 +275,84 @@ export const chartComponents = {
       yLabel: "毛利率",
     },
   },
+
+  DumbbellChart: {
+    description:
+      "哑铃图：两期 / 区间对比（去年 vs 今年、预算 vs 实际、薪酬区间）。每行一个类目，两点 + 连线，连线按方向着色（增绿减红）。比并排柱更省空间、更聚焦「变化量」。",
+    props: z.object({
+      ...titleShape,
+      data,
+      labelKey: z.string().describe("类目字段"),
+      startKey: z.string().describe("起点值字段（如 去年 / 预算）"),
+      endKey: z.string().describe("终点值字段（如 今年 / 实际）"),
+      startLabel: z.string().optional().describe("起点图例名，默认「去年」"),
+      endLabel: z.string().optional().describe("终点图例名，默认「今年」"),
+      valueFormat,
+    }),
+    example: {
+      title: "各分部 今年 vs 去年",
+      data: [{ seg: "云", last: 301, now: 416 }],
+      labelKey: "seg",
+      startKey: "last",
+      endKey: "now",
+    },
+  },
+
+  SlopeChart: {
+    description:
+      "斜率图：只看两个时点间的方向 / 排名变化（各类目 去年→今年 谁升谁降）。每类目一条斜线，按方向着色。值差距悬殊时下方会拥挤，适合量级相近的对比。",
+    props: z.object({
+      ...titleShape,
+      data,
+      labelKey: z.string().describe("类目字段"),
+      startKey: z.string().describe("左侧（起点）值字段"),
+      endKey: z.string().describe("右侧（终点）值字段"),
+      startLabel: z.string().optional().describe("左轴名，默认「去年」"),
+      endLabel: z.string().optional().describe("右轴名，默认「今年」"),
+      valueFormat,
+      height,
+    }),
+  },
+
+  HeatmapChart: {
+    description:
+      "热力图（网格）：x 类目 × y 类目 × 强度，用颜色深浅表达数值。如 指标×季度、月×品类、风险矩阵。diverging=true 时正绿负红（适合利润率 / 增速），否则单色由浅到深。data 用长表：每行 {x, y, value}。",
+    props: z.object({
+      ...titleShape,
+      data,
+      xKey: z.string().describe("列字段（横向类目，如季度）"),
+      yKey: z.string().describe("行字段（纵向类目，如指标）"),
+      valueKey: z.string().describe("强度值字段"),
+      diverging: z.boolean().default(false).describe("正负发散着色（正绿负红，0 为中性）"),
+      valueFormat,
+    }),
+    example: {
+      title: "利润率热力图",
+      data: [{ q: "24/06", metric: "经营利润率", v: 14.8 }],
+      xKey: "q",
+      yKey: "metric",
+      valueKey: "v",
+      diverging: true,
+      valueFormat: "percent",
+    },
+  },
+
+  RadarChart: {
+    description:
+      "雷达图：多维 / 多类目对比，每条系列是一张多边形。⚠️ 严肃财报里慎用——多指标单位不一致、径向长度难比较时易误导；较安全的用法是同一组类目的两期对比（如各分部 今年 vs 去年，同单位）。",
+    props: z.object({
+      ...titleShape,
+      data,
+      axisKey: z.string().describe("轴 / 维度字段（每行一个轴，如分部名）"),
+      series,
+      valueFormat,
+      height,
+    }),
+    example: {
+      title: "各分部 今年 vs 去年",
+      data: [{ seg: "云", now: 416, last: 301 }],
+      axisKey: "seg",
+      series: [{ key: "now", label: "今年" }, { key: "last", label: "去年" }],
+    },
+  },
 } satisfies ComponentDefs;

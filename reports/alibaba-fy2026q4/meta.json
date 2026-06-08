@@ -5,6 +5,7 @@
     "summary": "summary.csv",
     "segments": "segments.csv",
     "bridge": "bridge.csv",
-    "quarterly": "quarterly.csv"
+    "quarterly": "quarterly.csv",
+    "heatmap": "heatmap.csv"
   }
 }

@@ -1,0 +1,195 @@
+{
+  "root": "page",
+  "elements": {
+    "page": {
+      "type": "Page",
+      "props": {
+        "title": "Magnificent 7 财务对比",
+        "subtitle": "营收 · 经营成本去向 · 现金流健康度 · 单位：十亿美元 · 数据源：SEC EDGAR 10-K（各家最新财年）",
+        "updatedAt": "2026-06-08"
+      },
+      "children": ["sec-kpi", "sec-rev", "sec-cash", "sec-insight"]
+    },
+
+    "sec-kpi": {
+      "type": "Section",
+      "props": { "title": "M7 概览", "description": "七家合计（各自最新财年）" },
+      "children": ["grid-kpi"]
+    },
+    "grid-kpi": {
+      "type": "Grid",
+      "props": { "gap": "sm", "spans": [3, 3, 3, 3] },
+      "children": ["kpi-rev", "kpi-ni", "kpi-fcf", "kpi-capex"]
+    },
+    "kpi-rev": {
+      "type": "KpiCard",
+      "props": {
+        "label": "合计营收", "icon": "revenue", "format": "number", "unit": "十亿$",
+        "value": { "$computed": "sum", "args": { "rows": { "$state": "/datasets/m7/rows" }, "field": "revenue" } }
+      },
+      "children": []
+    },
+    "kpi-ni": {
+      "type": "KpiCard",
+      "props": {
+        "label": "合计净利润", "icon": "profit", "format": "number", "unit": "十亿$",
+        "value": { "$computed": "sum", "args": { "rows": { "$state": "/datasets/m7/rows" }, "field": "net_income" } }
+      },
+      "children": []
+    },
+    "kpi-fcf": {
+      "type": "KpiCard",
+      "props": {
+        "label": "合计自由现金流", "icon": "chart", "format": "number", "unit": "十亿$",
+        "value": { "$computed": "sum", "args": { "rows": { "$state": "/datasets/m7/rows" }, "field": "fcf" } }
+      },
+      "children": []
+    },
+    "kpi-capex": {
+      "type": "KpiCard",
+      "props": {
+        "label": "合计资本开支", "icon": "cost", "format": "number", "unit": "十亿$",
+        "value": { "$computed": "sum", "args": { "rows": { "$state": "/datasets/m7/rows" }, "field": "capex" } }
+      },
+      "children": []
+    },
+
+    "sec-rev": {
+      "type": "Section",
+      "props": { "title": "营收规模与成本结构", "description": "钱从哪来、又主要花到哪去" },
+      "children": ["grid-rev"]
+    },
+    "grid-rev": {
+      "type": "Grid",
+      "props": { "gap": "sm", "spans": [4, 8] },
+      "children": ["rev-rank", "cost-structure"]
+    },
+    "rev-rank": {
+      "type": "BarChart",
+      "props": {
+        "title": "营收排行",
+        "subtitle": "最新财年（十亿美元）",
+        "xKey": "company",
+        "sort": "desc",
+        "highlight": "max",
+        "showValues": true,
+        "valueFormat": "number",
+        "height": 300,
+        "series": [{ "key": "revenue", "label": "营收" }],
+        "data": { "$state": "/datasets/m7/rows" }
+      },
+      "children": []
+    },
+    "cost-structure": {
+      "type": "BarChart",
+      "props": {
+        "title": "经营成本去哪：每 100 元收入的去向",
+        "subtitle": "营业成本 / 研发(技术) / 销售管理(含亚马逊履约) / 经营利润，按经营利润率排序",
+        "xKey": "company",
+        "stack100": true,
+        "valueFormat": "number",
+        "height": 300,
+        "series": [
+          { "key": "cogs", "label": "营业成本" },
+          { "key": "rd", "label": "研发/技术" },
+          { "key": "sga", "label": "销售管理/运营" },
+          { "key": "profit", "label": "经营利润" }
+        ],
+        "data": {
+          "$computed": "sortBy",
+          "args": { "rows": { "$state": "/datasets/m7/rows" }, "field": "op_margin", "dir": "asc" }
+        }
+      },
+      "children": []
+    },
+
+    "sec-cash": {
+      "type": "Section",
+      "props": { "title": "现金流健康度", "description": "利润含金量、现金流转化与资本开支强度" },
+      "children": ["grid-cash"]
+    },
+    "grid-cash": {
+      "type": "Grid",
+      "props": { "gap": "sm", "spans": [6, 6, 12] },
+      "children": ["cash-matrix", "cfo-ni", "fcf-capex"]
+    },
+    "cash-matrix": {
+      "type": "ScatterChart",
+      "props": {
+        "title": "盈利 × 现金流矩阵",
+        "subtitle": "x=经营利润率% · y=自由现金流率% · 气泡=营收",
+        "xKey": "op_margin", "yKey": "fcf_margin", "sizeKey": "revenue", "nameKey": "company",
+        "xLabel": "经营利润率%", "yLabel": "自由现金流率%",
+        "valueFormat": "number", "height": 260,
+        "data": { "$state": "/datasets/m7/rows" }
+      },
+      "children": []
+    },
+    "cfo-ni": {
+      "type": "DumbbellChart",
+      "props": {
+        "title": "经营现金流 vs 净利润",
+        "subtitle": "现金流 > 净利 = 盈利含金量高（十亿美元）",
+        "labelKey": "company", "startKey": "net_income", "endKey": "cfo",
+        "startLabel": "净利润", "endLabel": "经营现金流", "valueFormat": "number",
+        "data": { "$computed": "sortBy", "args": { "rows": { "$state": "/datasets/m7/rows" }, "field": "cfo", "dir": "desc" } }
+      },
+      "children": []
+    },
+    "fcf-capex": {
+      "type": "BarChart",
+      "props": {
+        "title": "自由现金流率 vs 资本开支率：AI 军备竞赛吞噬现金",
+        "subtitle": "资本开支占营收越高，留存的自由现金流越薄（%）",
+        "xKey": "company",
+        "valueFormat": "percent",
+        "showValues": true,
+        "height": 240,
+        "series": [
+          { "key": "fcf_margin", "label": "自由现金流率%" },
+          { "key": "capex_intensity", "label": "资本开支率%" }
+        ],
+        "data": { "$computed": "sortBy", "args": { "rows": { "$state": "/datasets/m7/rows" }, "field": "capex_intensity", "dir": "desc" } }
+      },
+      "children": []
+    },
+
+    "sec-insight": {
+      "type": "Section",
+      "props": { "title": "洞察" },
+      "children": ["grid-insight"]
+    },
+    "grid-insight": {
+      "type": "Grid",
+      "props": { "gap": "sm", "spans": [4, 4, 4] },
+      "children": ["insight-1", "insight-2", "insight-3"]
+    },
+    "insight-1": {
+      "type": "Insight",
+      "props": {
+        "title": "成本结构天差地别",
+        "content": "「卖铲子」的英伟达毛利极高、销售管理仅占营收 2%，经营利润率高达 60%；特斯拉近 82% 的收入吃在营业成本里，经营利润率仅 4.6%。亚马逊一半收入是营业成本，再叠加约 30% 的履约 + 技术基础设施——重资产、重运营的生意，与软件公司完全不同。",
+        "tone": "neutral"
+      },
+      "children": []
+    },
+    "insight-2": {
+      "type": "Insight",
+      "props": {
+        "title": "现金含金量：英伟达最强，亚马逊最薄",
+        "content": "英伟达自由现金流率 44.8% 居首，苹果 / 微软 / Meta 在 23~25%。亚马逊营收最大（7169 亿美元），但资本开支高达 1318 亿，几乎吃光经营现金流，自由现金流率仅 1.1%。注意英伟达经营现金流反而低于净利润（0.86x），系销量爆发带来的应收 / 存货占用。",
+        "tone": "positive"
+      },
+      "children": []
+    },
+    "insight-3": {
+      "type": "Insight",
+      "props": {
+        "title": "AI 资本开支军备竞赛",
+        "content": "Meta（34.7%）、微软（22.9%）、谷歌（22.7%）、亚马逊（18.4%）把两成以上营收砸进资本开支（AI 算力 / 数据中心 / 物流），而英伟达、苹果仅约 3%（轻资产）。M7 合计资本开支已达约 3850 亿美元，是这轮 AI 周期里最值得盯的现金流出口。",
+        "tone": "warning"
+      },
+      "children": []
+    }
+  }
+}

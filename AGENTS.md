@@ -143,9 +143,13 @@ props 的值可以是字面量，也可以是**表达式对象**：
 - `WaterfallChart`（瀑布/利润桥）：解释「**为什么**从 A 变成 B」——营收→各项成本→净利、预算 vs 实际差异分解。`data` 每行一项增减值，`xKey`(类目)、`valueKey`(增减值，正增负减)、`totalKey?`(标记合计行的字段，画成从 0 起的总额柱)。增绿减红、自动累计。
 - `BulletChart`（子弹图）：指标**自带目标/基准**时比达成率，替代仪表盘。每行一个指标，`labelKey`、`valueKey`(实际)、`targetKey`(目标)，自动算达成%、目标处有刻度线。
 - `FunnelChart`（漏斗）：**严格单向递减**的流程（线索→签约、招聘漏斗、审批转化），暴露在哪一环流失最狠。`nameKey`(阶段)、`valueKey`(数值)，`data` 须按阶段顺序排列。
-- `ScatterChart`（散点/气泡）：看**两个连续变量的关系/离群点**（客户毛利率 vs 营收）。`xKey`、`yKey`，给 `sizeKey?` 即变气泡图，`nameKey?`/`xLabel?`/`yLabel?` 优化 tooltip。
+- `ScatterChart`（散点/气泡）：看**两个连续变量的关系/离群点**（客户毛利率 vs 营收）。`xKey`、`yKey`，给 `sizeKey?` 即变气泡图，`nameKey?`/`xLabel?`/`yLabel?` 优化 tooltip，`quadrant?` 画 x=0/y=0 象限线（增长×盈利矩阵）。
+- `DumbbellChart`（哑铃）：**两期/区间对比**（去年 vs 今年、预算 vs 实际）。`labelKey`、`startKey`(起点)、`endKey`(终点)、`startLabel?`/`endLabel?`，连线按方向着色（增绿减红）。比并排柱更聚焦"变化量"。
+- `SlopeChart`（斜率）：**两个时点的方向/排名变化**（各类目 去年→今年 谁升谁降）。`labelKey`、`startKey`、`endKey`、`startLabel?`/`endLabel?`。值差距悬殊时下方会拥挤，适合量级相近的对比。
+- `HeatmapChart`（热力图/网格）：`x 类目 × y 类目 × 强度`（指标×季度、月×品类）。长表 `data`，`xKey`/`yKey`/`valueKey`，`diverging?`(正绿负红，适合利润率)。
+- `RadarChart`（雷达）：多维/多类目对比，`axisKey`(每行一个轴) + `series`(每条一张多边形)。⚠️ **慎用**——多指标单位不一致、量级悬殊时易误导；较安全的用法是同一组类目、同单位的两期对比。
 
-> ⚠️ 别加雷达图/速度表：严肃财报里雷达图少用（多指标难比较、误导），速度表信息少——达成率用 `BulletChart` 或 `RadialStat`。
+> ⚠️ 注意：`RadarChart` 在"一家独大/多单位"数据上会被拉成尖刺、失真，优先考虑 `DumbbellChart`/`BarChart`；速度表信息少——达成率用 `BulletChart` 或 `RadialStat`。
 
 **表格** — 叶子：
 - `DataTable`：`data`、`columns[{key,label?,align?,format?}]`、`caption?`、`pageSize?`
