@@ -112,6 +112,9 @@ reports/<your-id>/
 
 **小 N 防空旷**：以一张 comp 表打底；散点务必 `nameKey` 直接贴名 + `quadrantMean` 给基准；用点图/`bar` 列替代肥柱；坐标范围贴合数据。
 
+> 📑 **要做「能支撑决策」的公司对比报告**（该放什么指标/章节/exhibit、需要哪些数据字段）：读
+> [`references/comparison-report-playbook.md`](references/comparison-report-playbook.md)——核心决策问题、七大指标族（估值/增长/ROIC 与 Rule of 40/现金流质量/资本配置/效率/风险）、决策级章节结构、内容→图型映射、scorecard 压缩法、数据字段来源。别只罗列营收利润，要回答"谁质量高、谁贵、谁资本配置优、AI 投入 ROI 谁更可信"。
+
 ## 让它"专业"（这些写进 spec，其余自动）
 
 - **`title` 写结论句**：「营收同比 +12%，华东领涨」而非「营收图」。靠卡片标题分组，少用 `Section`。
